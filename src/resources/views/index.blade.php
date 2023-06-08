@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Coordinator</title>
-    <link href="{{ secure_asset(mix("app.css", 'vendor/xguard-coordinator')) }}?v={{config('coordinator_app.version')}}"
+    <title>Tasklist</title>
+    <link href="{{ secure_asset(mix("app.css", 'vendor/tasklist')) }}?v={{config('tasklist.version')}}"
           rel="stylesheet" type="text/css">
 </head>
 <body>
 <div id="app"></div>
 <script
-    src="{{ secure_asset(mix('app.js', 'vendor/xguard-coordinator')) }}?v={{config('coordinator_app.version')}}"></script>
+    src="{{ secure_asset(mix('app.js', 'vendor/tasklist')) }}?v={{config('tasklist.version')}}"></script>
 </body>
 </html>

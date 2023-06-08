@@ -209,7 +209,7 @@
 
         'use strict';
         __webpack_require__.r(__webpack_exports__);
-        /* harmony import */ var _dashboardComponents_CoordinatorList_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboardComponents/CoordinatorList.vue */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue');
+        /* harmony import */ var _dashboardComponents_CoordinatorList_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./dashboardComponents/EmployeeList.vue */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue');
         /* harmony import */ var _dashboardComponents_BoardList_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dashboardComponents/BoardList.vue */ './src/resources/js/components/dashboard/dashboardComponents/BoardList.vue');
         /* harmony import */ var _dashboardComponents_Actions_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dashboardComponents/Actions.vue */ './src/resources/js/components/dashboard/dashboardComponents/Actions.vue');
         /* harmony import */ var _dashboardComponents_AddOrEditEmployeeModal_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dashboardComponents/AddOrEditEmployeeModal.vue */ './src/resources/js/components/dashboard/dashboardComponents/AddOrEditEmployeeModal.vue');
@@ -263,22 +263,22 @@
             created: function created() {
                 var _this = this;
 
-                this.eventHub.$on('save-employee', function (coordinatorData) {
-                    _this.saveEmployee(coordinatorData);
+                this.eventHub.$on('save-employee', function (tasklistData) {
+                    _this.saveEmployee(tasklistData);
                 });
                 this.eventHub.$on('save-board', function (kanbanData) {
                     _this.saveBoard(kanbanData);
                 });
             },
             methods: {
-                saveEmployee: function saveEmployee(coordinatorData) {
-                    console.log(coordinatorData);
+                saveEmployee: function saveEmployee(tasklistData) {
+                    console.log(tasklistData);
                     this.adminPageData.employees.unshift({
                         id: '16',
-                        name: coordinatorData.name,
-                        phone: coordinatorData.phone,
-                        role: coordinatorData.role,
-                        isActive: coordinatorData.isActive
+                        name: tasklistData.name,
+                        phone: tasklistData.phone,
+                        role: tasklistData.role,
+                        isActive: tasklistData.isActive
                     });
                 },
                 getDashboardData: function getDashboardData() {
@@ -701,7 +701,7 @@
             data: function data() {
                 return {
                     isEdit: false,
-                    coordinatorData: {
+                    tasklistData: {
                         id: null,
                         name: null,
                         phone: null,
@@ -716,10 +716,10 @@
 
                 this.eventHub.$on('create-kanban-employee', function (employee) {
                     if (employee !== undefined) {
-                        _this.coordinatorData = employee;
+                        _this.tasklistData = employee;
                         _this.isEdit = true;
                     } else {
-                        _this.coordinatorData = {
+                        _this.tasklistData = {
                             id: null,
                             name: null,
                             phone: null,
@@ -735,7 +735,7 @@
             methods: {
                 saveEmployee: function saveEmployee(event) {
                     event.target.disabled = true;
-                    this.eventHub.$emit('save-employee', this.coordinatorData);
+                    this.eventHub.$emit('save-employee', this.tasklistData);
                     this.modalOpen = false;
                 }
             }
@@ -745,7 +745,7 @@
 
     /***/ './node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&':
     /*!*********************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue?vue&type=script&lang=js& ***!
   \*********************************************************************************************************************************************************************************************************/
     /*! exports provided: default */
     /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -8714,8 +8714,8 @@ exports.clearInterval = function(timeout) {
                                                                         {
                                                                             name: 'model',
                                                                             rawName: 'v-model',
-                                                                            value: _vm.coordinatorData.name,
-                                                                            expression: 'coordinatorData.name'
+                                                                            value: _vm.tasklistData.name,
+                                                                            expression: 'tasklistData.name'
                                                                         }
                                                                     ],
                                                                     staticClass:
@@ -8724,14 +8724,14 @@ exports.clearInterval = function(timeout) {
                                                                         type: 'text',
                                                                         placeholder: 'John Doe'
                                                                     },
-                                                                    domProps: { value: _vm.coordinatorData.name },
+                                                                    domProps: { value: _vm.tasklistData.name },
                                                                     on: {
                                                                         input: function($event) {
                                                                             if ($event.target.composing) {
                                                                                 return;
                                                                             }
                                                                             _vm.$set(
-                                                                                _vm.coordinatorData,
+                                                                                _vm.tasklistData,
                                                                                 'name',
                                                                                 $event.target.value
                                                                             );
@@ -8754,8 +8754,8 @@ exports.clearInterval = function(timeout) {
                                                                         {
                                                                             name: 'model',
                                                                             rawName: 'v-model',
-                                                                            value: _vm.coordinatorData.phone,
-                                                                            expression: 'coordinatorData.phone'
+                                                                            value: _vm.tasklistData.phone,
+                                                                            expression: 'tasklistData.phone'
                                                                         }
                                                                     ],
                                                                     staticClass:
@@ -8764,14 +8764,14 @@ exports.clearInterval = function(timeout) {
                                                                         type: 'Number',
                                                                         placeholder: '+15145550000'
                                                                     },
-                                                                    domProps: { value: _vm.coordinatorData.phone },
+                                                                    domProps: { value: _vm.tasklistData.phone },
                                                                     on: {
                                                                         input: function($event) {
                                                                             if ($event.target.composing) {
                                                                                 return;
                                                                             }
                                                                             _vm.$set(
-                                                                                _vm.coordinatorData,
+                                                                                _vm.tasklistData,
                                                                                 'phone',
                                                                                 $event.target.value
                                                                             );
@@ -8812,8 +8812,8 @@ exports.clearInterval = function(timeout) {
                                                                                         {
                                                                                             name: 'model',
                                                                                             rawName: 'v-model',
-                                                                                            value: _vm.coordinatorData.role,
-                                                                                            expression: 'coordinatorData.role'
+                                                                                            value: _vm.tasklistData.role,
+                                                                                            expression: 'tasklistData.role'
                                                                                         }
                                                                                     ],
                                                                                     staticClass:
@@ -8825,14 +8825,14 @@ exports.clearInterval = function(timeout) {
                                                                                     },
                                                                                     domProps: {
                                                                                         checked: _vm._q(
-                                                                                            _vm.coordinatorData.role,
+                                                                                            _vm.tasklistData.role,
                                                                                             'employee'
                                                                                         )
                                                                                     },
                                                                                     on: {
                                                                                         change: function($event) {
                                                                                             return _vm.$set(
-                                                                                                _vm.coordinatorData,
+                                                                                                _vm.tasklistData,
                                                                                                 'role',
                                                                                                 'employee'
                                                                                             );
@@ -8872,8 +8872,8 @@ exports.clearInterval = function(timeout) {
                                                                                         {
                                                                                             name: 'model',
                                                                                             rawName: 'v-model',
-                                                                                            value: _vm.coordinatorData.role,
-                                                                                            expression: 'coordinatorData.role'
+                                                                                            value: _vm.tasklistData.role,
+                                                                                            expression: 'tasklistData.role'
                                                                                         }
                                                                                     ],
                                                                                     staticClass:
@@ -8886,14 +8886,14 @@ exports.clearInterval = function(timeout) {
                                                                                     },
                                                                                     domProps: {
                                                                                         checked: _vm._q(
-                                                                                            _vm.coordinatorData.role,
+                                                                                            _vm.tasklistData.role,
                                                                                             'admin'
                                                                                         )
                                                                                     },
                                                                                     on: {
                                                                                         change: function($event) {
                                                                                             return _vm.$set(
-                                                                                                _vm.coordinatorData,
+                                                                                                _vm.tasklistData,
                                                                                                 'role',
                                                                                                 'admin'
                                                                                             );
@@ -8965,9 +8965,9 @@ exports.clearInterval = function(timeout) {
                                                                                                     name: 'model',
                                                                                                     rawName: 'v-model',
                                                                                                     value:
-                                                  _vm.coordinatorData.isActive,
+                                                  _vm.tasklistData.isActive,
                                                                                                     expression:
-                                                  'coordinatorData.isActive'
+                                                  'tasklistData.isActive'
                                                                                                 }
                                                                                             ],
                                                                                             staticClass: 'hidden',
@@ -8977,18 +8977,18 @@ exports.clearInterval = function(timeout) {
                                                                                             },
                                                                                             domProps: {
                                                                                                 checked: Array.isArray(
-                                                                                                    _vm.coordinatorData.isActive
+                                                                                                    _vm.tasklistData.isActive
                                                                                                 )
                                                                                                     ? _vm._i(
-                                                                                                        _vm.coordinatorData.isActive,
+                                                                                                        _vm.tasklistData.isActive,
                                                                                                         null
                                                                                                     ) > -1
-                                                                                                    : _vm.coordinatorData.isActive
+                                                                                                    : _vm.tasklistData.isActive
                                                                                             },
                                                                                             on: {
                                                                                                 change: function($event) {
                                                                                                     var $$a =
-                                                    _vm.coordinatorData.isActive,
+                                                    _vm.tasklistData.isActive,
                                                                                                         $$el = $event.target,
                                                                                                         $$c = $$el.checked
                                                                                                             ? true
@@ -8999,14 +8999,14 @@ exports.clearInterval = function(timeout) {
                                                                                                         if ($$el.checked) {
                                                                                                             $$i < 0 &&
                                                       _vm.$set(
-                                                          _vm.coordinatorData,
+                                                          _vm.tasklistData,
                                                           'isActive',
                                                           $$a.concat([$$v])
                                                       );
                                                                                                         } else {
                                                                                                             $$i > -1 &&
                                                       _vm.$set(
-                                                          _vm.coordinatorData,
+                                                          _vm.tasklistData,
                                                           'isActive',
                                                           $$a
                                                               .slice(0, $$i)
@@ -9017,7 +9017,7 @@ exports.clearInterval = function(timeout) {
                                                                                                         }
                                                                                                     } else {
                                                                                                         _vm.$set(
-                                                                                                            _vm.coordinatorData,
+                                                                                                            _vm.tasklistData,
                                                                                                             'isActive',
                                                                                                             $$c
                                                                                                         );
@@ -9038,7 +9038,7 @@ exports.clearInterval = function(timeout) {
                                                                                     ]
                                                                                 ),
                                                                                 _vm._v(' '),
-                                                                                _vm.coordinatorData.isActive
+                                                                                _vm.tasklistData.isActive
                                                                                     ? _c(
                                                                                         'div',
                                                                                         {
@@ -9144,7 +9144,7 @@ exports.clearInterval = function(timeout) {
 
     /***/ './node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&':
     /*!*************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2& ***!
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue?vue&type=template&id=5c5043e2& ***!
   \*************************************************************************************************************************************************************************************************************************************************/
     /*! exports provided: render, staticRenderFns */
     /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -30835,15 +30835,15 @@ strats.computed = function (
 
     /***/ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue':
     /*!************************************************************************************!*\
-  !*** ./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue ***!
+  !*** ./src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue ***!
   \************************************************************************************/
     /*! exports provided: default */
     /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
         'use strict';
         __webpack_require__.r(__webpack_exports__);
-        /* harmony import */ var _CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CoordinatorList.vue?vue&type=template&id=5c5043e2& */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&');
-        /* harmony import */ var _CoordinatorList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CoordinatorList.vue?vue&type=script&lang=js& */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&');
+        /* harmony import */ var _CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./EmployeeList.vue?vue&type=template&id=5c5043e2& */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&');
+        /* harmony import */ var _CoordinatorList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EmployeeList.vue?vue&type=script&lang=js& */ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&');
         /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ './node_modules/vue-loader/lib/runtime/componentNormalizer.js');
 
 
@@ -30865,35 +30865,35 @@ strats.computed = function (
 
         /* hot reload */
         if (false) { var api; }
-        component.options.__file = 'src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue';
+        component.options.__file = 'src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue';
         /* harmony default export */ __webpack_exports__['default'] = (component.exports);
 
         /***/ }),
 
     /***/ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&':
     /*!*************************************************************************************************************!*\
-  !*** ./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js& ***!
+  !*** ./src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue?vue&type=script&lang=js& ***!
   \*************************************************************************************************************/
     /*! exports provided: default */
     /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
         'use strict';
         __webpack_require__.r(__webpack_exports__);
-        /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./CoordinatorList.vue?vue&type=script&lang=js& */ './node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&');
+        /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeeList.vue?vue&type=script&lang=js& */ './node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=script&lang=js&');
         /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__['default'] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__['default']);
 
         /***/ }),
 
     /***/ './src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&':
     /*!*******************************************************************************************************************!*\
-  !*** ./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2& ***!
+  !*** ./src/resources/js/components/dashboard/dashboardComponents/EmployeeList.vue?vue&type=template&id=5c5043e2& ***!
   \*******************************************************************************************************************/
     /*! exports provided: render, staticRenderFns */
     /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
         'use strict';
         __webpack_require__.r(__webpack_exports__);
-        /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./CoordinatorList.vue?vue&type=template&id=5c5043e2& */ './node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&');
+        /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./EmployeeList.vue?vue&type=template&id=5c5043e2& */ './node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/resources/js/components/dashboard/dashboardComponents/CoordinatorList.vue?vue&type=template&id=5c5043e2&');
         /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, 'render', function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__['render']; });
 
         /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, 'staticRenderFns', function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CoordinatorList_vue_vue_type_template_id_5c5043e2___WEBPACK_IMPORTED_MODULE_0__['staticRenderFns']; });

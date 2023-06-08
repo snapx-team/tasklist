@@ -1,14 +1,14 @@
 <?php
 
-Route::group(['prefix' => 'coordinator', 'as' => 'coordinator'], function () {
-    Route::group(['namespace' => 'Xguard\Coordinator\Http\Controllers',], function () {
+Route::group(['prefix' => 'tasklist', 'as' => 'tasklist'], function () {
+    Route::group(['namespace' => 'Xguard\Tasklist\Http\Controllers',], function () {
 
         Route::group(['middleware' => ['web']], function () {
 
             // Setting sessions variables and checking if user is still logged in
-            Route::get('/set-sessions', 'AppController@setCoordinatorAppSessionVariables');
+            Route::get('/set-sessions', 'AppController@setTasklistSessionVariables');
 
-            Route::group(['middleware' => ['coordinator_app_role_check']], function () {
+            Route::group(['middleware' => ['tasklist_role_check']], function () {
 
                 // We'll let vue router handle 404 (it will redirect to dashboard)
                 Route::fallback('AppController@getIndex');
@@ -16,33 +16,28 @@ Route::group(['prefix' => 'coordinator', 'as' => 'coordinator'], function () {
                 // All view routes are handled by vue router
                 Route::get('/', 'AppController@getIndex');
 
-                // Coordinator App Data
-                Route::get('/get-role-and-coordinator-id', 'AppController@getRoleAndCoordinatorId');
+                // Employee App Data
+                Route::get('/get-role-and-employee-id', 'AppController@getRoleAndEmployeeId');
                 Route::get('/get-admin-page-data', 'AppController@getAdminPageData');
-                Route::get('/get-coordinator-profile', 'AppController@getCoordinatorProfile');
+                Route::get('/get-employee-profile', 'AppController@getEmployeeProfile');
                 Route::get('/get-footer-info', 'AppController@getFooterInfo');
 
-                // Supervisors
-                Route::get('/get-supervisors-data', 'SupervisorController@getSupervisorsData')->name('.get-supervisor-data');
-                Route::get('/get-user-shift-odometer-images/{userId}/{shift}', 'SupervisorController@getUserShiftOdometerImages');
+                // Employees
+                Route::post('/create-employees', 'EmployeeController@createEmployees');
+                Route::post('/delete-employee/{id}', 'EmployeeController@deleteEmployee');
+                Route::get('/get-employees', 'EmployeeController@getEmployees');
 
-                // Coordinators
-                Route::post('/create-coordinators', 'CoordinatorController@createCoordinators');
-                Route::post('/delete-coordinator/{id}', 'CoordinatorController@deleteCoordinator');
-                Route::get('/get-coordinators', 'CoordinatorController@getCoordinators');
+                // Tasks
+                Route::post('/create-task', 'TaskController@createTask');
+                Route::post('/delete-task/{id}', 'TaskController@deleteTask');
+                Route::get('/get-global-contract-tasks/{id}', 'TaskController@getGlobalContractTasks');
+                Route::get('/get-job-site-tasks/{id}', 'TaskController@getJobSiteTasks');
 
                 //ERP Data
                 Route::get('/get-all-users', 'ErpController@getAllUsers');
                 Route::get('/get-some-users/{searchTerm}', 'ErpController@getSomeUsers');
                 Route::get('/get-all-active-contracts', 'ErpController@getAllActiveContracts');
                 Route::get('/get-some-active-contracts/{searchTerm}', 'ErpController@getSomeActiveContracts');
-
-                //Location
-
-                Route::get(
-                    '/get-location-pings/{supervisorShiftId}',
-                    'LocationPingController@getSupervisorShiftLocationPings'
-                )->name('.get-supervisor-shift-location-ping');
             });
         });
     });

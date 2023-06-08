@@ -5,13 +5,13 @@
                 <side-bar></side-bar>
             </div>
             <div class="relative min-w-screen border-r flex-grow overflow-x-auto"
-                 v-bind:class="{ 'overflow-hidden': coordinatorPluginIsLoading }">
+                 v-bind:class="{ 'overflow-hidden': tasklistPluginIsLoading }">
                 <transition enter-active-class="transition duration-500 ease-out transform"
                             enter-class=" opacity-0 bg-blue-200"
                             leave-active-class="transition duration-300 ease-in transform"
                             leave-to-class="opacity-0 bg-blue-200">
                     <div class="z-50 overflow-auto h-screen absolute inset-0 bg-gray-400 bg-opacity-75 flex"
-                         v-if="coordinatorPluginIsLoading">
+                         v-if="tasklistPluginIsLoading">
                         <loading-animation :size="100" class="m-auto"></loading-animation>
                     </div>
                 </transition>
@@ -41,7 +41,7 @@ export default {
     data() {
         return {
             eventHub: new Vue(),
-            coordinatorPluginIsLoading: false,
+            tasklistPluginIsLoading: false,
         };
     },
 
@@ -70,7 +70,7 @@ export default {
     },
     created() {
         this.eventHub.$on("set-loading-state", (state) => {
-            this.coordinatorPluginIsLoading = state;
+            this.tasklistPluginIsLoading = state;
         });
     },
 

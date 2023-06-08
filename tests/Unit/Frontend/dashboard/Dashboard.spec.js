@@ -48,11 +48,11 @@ describe('Dashboard.vue', () => {
             'lng': -75.159036
         };
 
-        expect(wrapper.vm.dataPaneIsVisible).toBe(false);
+        expect(wrapper.vm.jobSitePaneIsVisible).toBe(false);
         expect(wrapper.vm.mapPaneData.currentMarkerIndex).toBe(null);
         expect(wrapper.vm.mapPaneData.infoPosition).toBe(null);
         wrapper.vm.openWindow(marker, 1);
-        expect(wrapper.vm.dataPaneIsVisible).toBe(true);
+        expect(wrapper.vm.jobSitePaneIsVisible).toBe(true);
         expect(wrapper.vm.mapPaneData.currentMarkerIndex).toBe(1);
         expect(wrapper.vm.mapPaneData.infoPosition).toMatchObject(infoPosition);
     });
@@ -60,9 +60,9 @@ describe('Dashboard.vue', () => {
     it('setJobSiteMarkers formats data properly for google maps', () => {
 
         expect(wrapper.vm.mapPaneData.googleMapRefreshKey).toBe(0);
-        expect(wrapper.vm.dataPaneIsVisible).toBe(false);
+        expect(wrapper.vm.jobSitePaneIsVisible).toBe(false);
         wrapper.vm.showDataPaneInfo({supervisorShift: supervisorMockData().supervisorShifts[0], supervisor: {}});
-        expect(wrapper.vm.dataPaneIsVisible).toBe(true);
+        expect(wrapper.vm.jobSitePaneIsVisible).toBe(true);
         expect(wrapper.vm.mapPaneData.googleMapRefreshKey).toBe(1);
         expect(wrapper.vm.selectedSupervisorShift.jobSiteVisits.length).toBe(2);
 

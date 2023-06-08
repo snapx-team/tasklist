@@ -31,6 +31,7 @@ mix.options({
             symlinks: false,
             alias: {
                 '@': path.resolve(__dirname, 'src/resources/js/'),
+                '@@': path.resolve(__dirname, 'src/resources/assets/'),
             },
         },
         plugins: [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)],

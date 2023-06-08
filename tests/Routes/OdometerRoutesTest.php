@@ -7,8 +7,8 @@ use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\Odometer;
-use Xguard\Coordinator\Models\SupervisorShift;
+use Xguard\Tasklist\Models\Odometer;
+use Xguard\Tasklist\Models\SupervisorShift;
 
 /**
  * @group supervisor
@@ -18,8 +18,8 @@ class OdometerRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const SUPERVISOR_CREATE_ODOMETER = 'coordinator.create-odometer';
-    const SUPERVISOR_UPDATE_ODOMETER = 'coordinator.update-odometer';
+    const SUPERVISOR_CREATE_ODOMETER = 'tasklist.create-odometer';
+    const SUPERVISOR_UPDATE_ODOMETER = 'tasklist.update-odometer';
 
     public function setUp(): void
     {

@@ -7,8 +7,8 @@ use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\LocationPing;
-use Xguard\Coordinator\Models\SupervisorShift;
+use Xguard\Tasklist\Models\LocationPing;
+use Xguard\Tasklist\Models\SupervisorShift;
 
 /**
  * @group supervisor
@@ -17,7 +17,7 @@ class LocationPingRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const CREATE_LOCATION_PING = 'coordinator.create-location-ping';
+    const CREATE_LOCATION_PING = 'tasklist.create-location-ping';
     const ID = 'id';
 
     public function setUp(): void

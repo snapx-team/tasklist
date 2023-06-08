@@ -1,7 +1,7 @@
 /* eslint-disable no-undef*/
 
 import {createLocalVue, shallowMount} from '@vue/test-utils';
-import MapPane from '../../../../src/resources/js/components/dashboard/dashboardComponents/MapPane';
+import MapPane from '../../../../src/resources/js/components/dashboard/dashboardComponents/PaneContent.vue';
 import Vue from 'vue';
 
 const localVue = createLocalVue();

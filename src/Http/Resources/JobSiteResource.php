@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\Http\Resources;
+namespace Xguard\Tasklist\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

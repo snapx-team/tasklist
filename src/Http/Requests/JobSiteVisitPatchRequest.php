@@ -1,15 +1,15 @@
 <?php
 
-namespace Xguard\Coordinator\Http\Requests;
+namespace Xguard\Tasklist\Http\Requests;
 
-use Xguard\Coordinator\Models\JobSiteVisit;
+use Xguard\Tasklist\Models\JobSiteVisit;
 
 class JobSiteVisitPatchRequest extends BaseFormRequest
 {
     public function rules(): array
     {
         return  [
-            JobSiteVisit::ID => 'required|exists:Xguard\Coordinator\Models\JobSiteVisit,id',
+            JobSiteVisit::ID => 'required|exists:Xguard\Tasklist\Models\JobSiteVisit,id',
         ];
     }
 }

@@ -12,25 +12,25 @@ export default new Router({
     routes: [
         {
             path: '*',
-            redirect: 'coordinator/dashboard'
+            redirect: 'tasklist/dashboard'
         },
         {
-            path: '/coordinator/',
-            redirect: 'coordinator/dashboard'
+            path: '/tasklist/',
+            redirect: 'tasklist/dashboard'
         },
         {
             name: 'dashboard',
-            path: '/coordinator/dashboard',
+            path: '/tasklist/dashboard',
             component: Dashboard
         },
 
         {
-            path: '/coordinator/admin',
+            path: '/tasklist/admin',
             component: Admin
         },
 
         {
-            path: '/coordinator/user-profile',
+            path: '/tasklist/user-profile',
             component: UserProfile
         }
     ]

@@ -1,36 +1,22 @@
 <template>
-    <li class="px-3 py-2 m-1 flex justify-between items-center bg-white cursor-pointer border-b border-l border-gray">
+    <li class="px-3 py-2 flex justify-between items-center bg-white cursor-pointer border-b border-l border-gray">
         <div class="flex items-center">
-            <div class="w-8 h-8 rounded-full flex flex-none bg-red-500">
-                <p class="text-white m-auto font-semibold">{{ jobSiteMarker.label.text }}</p>
-            </div>
-            <div class="ml-3 leading-4 text-gray-700 tracking-wide">
-                <p class="font-semibold text-sm">{{ jobSiteMarker.name }}</p>
-                <small class="text-gray-400 text-xs">{{ jobSiteMarker.address }}</small>
-                <p v-if="jobSiteMarker.endTime" class="font-semibold text-xs pt-2 text-purple-700">visited between:
-                    {{ jobSiteMarker.startTime | moment("HH:mm") }}h - {{ jobSiteMarker.endTime | moment("HH:mm") }}h
-                </p>
-                <p v-else class="font-semibold text-xs pt-2 text-purple-700">started visit at:
-                    {{ jobSiteMarker.startTime | moment("HH:mm") }}h
-                </p>
+                <i class="fa fa-map-marker-alt mr-2 text-red-500"></i>
+            <div class="ml-3 leading-4 text-gray-600 tracking-wide">
+                <p class="font-semibold text-sm">{{ addressData.address }}</p>
             </div>
         </div>
     </li>
 </template>
 <script>
 
-import Avatar from "../../global/Avatar";
-
 export default {
 
-    components: {
-        Avatar
-    },
     props: {
-        jobSiteMarker: {
+        addressData: {
             type: Object,
             default: () => ({})
         }
-    }
+    },
 };
 </script>

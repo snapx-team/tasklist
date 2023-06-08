@@ -7,8 +7,8 @@ use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\Odometer;
-use Xguard\Coordinator\Models\SupervisorShift;
+use Xguard\Tasklist\Models\Odometer;
+use Xguard\Tasklist\Models\SupervisorShift;
 
 /**
  * @group supervisor
@@ -17,9 +17,9 @@ class SupervisorShiftRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const COORDINATOR_CREATE_SHIFT = 'coordinator.create-shift';
-    const COORDINATOR_UPDATE_SHIFT = 'coordinator.update-shift';
-    const COORDINATOR_CHECK_PREVIOUS_SHIFT = 'coordinator.check-previous-shift';
+    const COORDINATOR_CREATE_SHIFT = 'tasklist.create-shift';
+    const COORDINATOR_UPDATE_SHIFT = 'tasklist.update-shift';
+    const COORDINATOR_CHECK_PREVIOUS_SHIFT = 'tasklist.check-previous-shift';
     const USER_ID = 'userId';
     const ODOMETER_ID = 'odometer_id';
 
