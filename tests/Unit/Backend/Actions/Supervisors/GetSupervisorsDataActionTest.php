@@ -10,11 +10,11 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
-use Xguard\Coordinator\Actions\Supervisors\GetSupervisorsDataAction;
-use Xguard\Coordinator\Models\Coordinator;
+use Xguard\Tasklist\Actions\Contracts\GetContractsDataAction;
+use Xguard\Tasklist\Models\Employee;
 use Tests\SetsRolesAndPermissions;
-use Xguard\Coordinator\Models\JobSiteVisit;
-use Xguard\Coordinator\Models\SupervisorShift;
+use Xguard\Tasklist\Models\JobSiteVisit;
+use Xguard\Tasklist\Models\SupervisorShift;
 
 class GetSupervisorsDataActionTest extends TestCase
 {
@@ -25,9 +25,9 @@ class GetSupervisorsDataActionTest extends TestCase
         parent::setUp();
         $this->setRolesAndPermissions();
         $this->user = factory(User::class)->create();
-        $this->coordinator = factory(Coordinator::class)->states('admin')->create(['user_id' => $this->user->id]);
+        $this->tasklist = factory(Employee::class)->states('admin')->create(['user_id' => $this->user->id]);
         Auth::setUser($this->user);
-        session(['role' => 'admin', 'coordinator_id' => $this->user->id]);
+        session(['role' => 'admin', 'tasklist_id' => $this->user->id]);
     }
 
     public function testRetrieveOnlySupervisors()
@@ -35,11 +35,11 @@ class GetSupervisorsDataActionTest extends TestCase
         $newUser = factory(User::class)->states('employee', 'verified')->create();
         $dateRage = ['start' => Carbon::now()->format('Y-m-d'), 'end' => Carbon::yesterday()->format('Y-m-d')];
 
-        $supervisorsData = app(GetSupervisorsDataAction::class)->fill(['dateRange' => $dateRage])->run();
+        $supervisorsData = app(GetContractsDataAction::class)->fill(['dateRange' => $dateRage])->run();
         $this->assertFalse($supervisorsData['supervisorsData']->contains('id', $newUser->id));
 
         $newUser->assignRole(Roles::SUPERVISOR()->getValue());
-        $supervisorsData = app(GetSupervisorsDataAction::class)->fill(['dateRange' => $dateRage])->run();
+        $supervisorsData = app(GetContractsDataAction::class)->fill(['dateRange' => $dateRage])->run();
         $this->assertTrue($supervisorsData['supervisorsData']->contains('id', $newUser->id));
     }
 
@@ -57,7 +57,7 @@ class GetSupervisorsDataActionTest extends TestCase
             'supervisor_shift_id' => $supervisorShift->id, 'job_site_id' => $jobSite->id
         ]);
 
-        $uri = route('coordinator.get-supervisor-data', ['start' => Carbon::now()->format('Y-m-d'), 'end' => Carbon::yesterday()->format('Y-m-d')]);
+        $uri = route('tasklist.get-supervisor-data', ['start' => Carbon::now()->format('Y-m-d'), 'end' => Carbon::yesterday()->format('Y-m-d')]);
 
         $this->getJson($uri)
             ->assertStatus(200)

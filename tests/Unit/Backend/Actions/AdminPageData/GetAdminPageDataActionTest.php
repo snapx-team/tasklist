@@ -8,8 +8,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
-use Xguard\Coordinator\Actions\AdminPageData\GetAdminPageDataAction;
-use Xguard\Coordinator\Models\Coordinator;
+use Xguard\TaskList\Actions\AdminPageData\GetAdminPageDataAction;
+use Xguard\Tasklist\Models\Employee;
 
 class GetAdminPageDataActionTest extends TestCase
 {
@@ -20,22 +20,22 @@ class GetAdminPageDataActionTest extends TestCase
         parent::setUp();
         $user = factory(User::class)->create();
         Auth::setUser($user);
-        $coordinator = factory(Coordinator::class)->states('admin')->create(['user_id' => $user->id,]);
-        session(['role' => 'admin', 'coordinator_id' => $coordinator->id]);
+        $tasklist = factory(Employee::class)->states('admin')->create(['user_id' => $user->id,]);
+        session(['role' => 'admin', 'tasklist_id' => $tasklist->id]);
 
-        factory(Coordinator::class, 2)->create();
+        factory(Employee::class, 2)->create();
     }
 
     public function testGetAdminPageDataIfAdmin()
     {
         $dashboardData = app(GetAdminPageDataAction::class)->run();
-        $this->assertCount(3, $dashboardData['coordinators']);
+        $this->assertCount(3, $dashboardData['tasklists']);
     }
 
     public function testGetAdminPageDataActionThrowsErrorIfCoordinatorIsNotAdmin()
     {
         $this->expectException(AuthorizationException::class);
-        session(['role' => 'coordinator', 'coordinator_id' => session('coordinator_id')]);
+        session(['role' => 'tasklist', 'tasklist_id' => session('tasklist_id')]);
         app(GetAdminPageDataAction::class)->run();
     }
 }

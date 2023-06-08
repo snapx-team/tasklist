@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\Repositories;
+namespace Xguard\Tasklist\Repositories;
 
 use Xguard\LaravelKanban\Entities\ErpUser;
 use App\Models\User;

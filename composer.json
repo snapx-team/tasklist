@@ -1,5 +1,5 @@
 {
-    "name": "xguard/xguard-coordinator",
+    "name": "xguard/tasklist",
     "description": "A plugin to manage supervisors on the XGuard ERP",
     "license": "MIT",
     "authors": [
@@ -13,14 +13,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Xguard\\Coordinator\\": "src/"
+            "Xguard\\Tasklist\\": "src/"
         }
     },
 
     "extra": {
         "laravel": {
             "providers": [
-              "Xguard\\Coordinator\\CoordinatorServiceProvider"
+              "Xguard\\Tasklist\\TasklistServiceProvider"
             ]
         }
     }

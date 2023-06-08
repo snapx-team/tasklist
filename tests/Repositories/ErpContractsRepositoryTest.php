@@ -7,7 +7,7 @@ use App\Models\JobSite;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Xguard\Coordinator\Repositories\ErpContractsRepository;
+use Xguard\Tasklist\Repositories\ErpContractsRepository;
 
 class ErpContractsRepositoryTest extends TestCase
 {

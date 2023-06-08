@@ -1,65 +1,61 @@
 <?php
 
-namespace Xguard\Coordinator\Http\Controllers;
+namespace Xguard\Tasklist\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Responses\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Xguard\Coordinator\Actions\AdminPageData\GetAdminPageDataAction;
-use Xguard\Coordinator\Actions\Supervisors\GetSupervisorsDataAction;
-use Xguard\Coordinator\Enums\SessionVariables;
-use Xguard\Coordinator\Models\Coordinator;
-use Xguard\Coordinator\Actions\CoordinatorProfileData\GetCoordinatorProfileAction;
+use Xguard\Tasklist\Actions\AdminPageData\GetAdminPageDataAction;
+use Xguard\Tasklist\Actions\EmployeeProfileData\GetEmployeeProfileAction;
+use Xguard\Tasklist\Enums\SessionVariables;
+use Xguard\Tasklist\Models\Employee;
 
 class AppController extends Controller
 {
     public function getIndex()
     {
-        $this->setCoordinatorAppSessionVariables();
-        return view('Xguard\Coordinator::index');
+        $this->setTasklistSessionVariables();
+        return view('Xguard\Tasklist::index');
     }
 
-    public function setCoordinatorAppSessionVariables()
+    public function setTasklistSessionVariables()
     {
         $strIsLoggedIn = 'is_logged_in';
         if (Auth::check()) {
-            $coordinator = Coordinator::where(Coordinator::USER_ID, '=', Auth::user()->id)->first();
-            session([SessionVariables::ROLE()->getValue() => $coordinator->role, SessionVariables::COORDINATOR_ID()->getValue() => $coordinator->id]);
+            $employee = Employee::where(Employee::USER_ID, '=', Auth::user()->id)->first();
+            session([SessionVariables::ROLE()->getValue() => $employee->role, SessionVariables::EMPLOYEE_ID()->getValue() => $employee->id]);
             return [$strIsLoggedIn => true];
         }
         return [$strIsLoggedIn => false];
     }
 
-    public function getRoleAndCoordinatorId(): array
+    public function getRoleAndEmployeeId(): array
     {
         return [
             SessionVariables::ROLE()->getValue() => session(SessionVariables::ROLE()->getValue()),
-            SessionVariables::COORDINATOR_ID()->getValue() => session(SessionVariables::COORDINATOR_ID()->getValue()),
+            SessionVariables::EMPLOYEE_ID()->getValue() => session(SessionVariables::EMPLOYEE_ID()->getValue()),
         ];
     }
 
     public function getFooterInfo(): array
     {
         return [
-            'parent_name' => config('coordinator_app.parent_name'),
-            'version' => config('coordinator_app.version'),
+            'parent_name' => config('tasklist.parent_name'),
+            'version' => config('tasklist.version'),
             'date' => date("Y")
         ];
     }
 
     public function getAdminPageData()
     {
-        try {
             return app(GetAdminPageDataAction::class)->run();
-        } catch (\Exception $e) {
-            return new JsonResponse([], $e->getCode(), $e->getMessage());
-        }
+
     }
 
-    public function getCoordinatorProfile()
+    public function getEmployeeProfile(): JsonResponse
     {
         try {
-            $profile = (new GetCoordinatorProfileAction())->run();
+            $profile = (new GetEmployeeProfileAction())->run();
             return new JsonResponse($profile);
         } catch (\Exception $e) {
             return new JsonResponse([], $e->getCode(), $e->getMessage());

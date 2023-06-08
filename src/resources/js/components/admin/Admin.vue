@@ -7,20 +7,20 @@
         </div>
 
         <div class="mx-10 my-3 space-y-5 shadow-xl p-5 bg-white">
-            <actions :coordinatorsLength="adminPageData.coordinators.length"></actions>
+            <actions :employeesLength="adminPageData.employees.length"></actions>
 
-            <coordinator-list :class="{ 'animate-pulse': loadingCoordinators }"
-                           :coordinators="adminPageData.coordinators"></coordinator-list>
+            <employee-list :class="{ 'animate-pulse': loadingEmployees }"
+                           :employees="adminPageData.employees"></employee-list>
 
-            <add-or-edit-coordinator-modal></add-or-edit-coordinator-modal>
+            <add-or-edit-employee-modal></add-or-edit-employee-modal>
         </div>
     </div>
 </template>
 
 <script>
-import CoordinatorList from "./adminComponents/CoordinatorList.vue";
+import EmployeeList from "./adminComponents/EmployeeList.vue";
 import Actions from "./adminComponents/Actions.vue";
-import AddOrEditCoordinatorModal from "./adminComponents/AddOrEditCoordinatorModal";
+import AddOrEditEmployeeModal from "./adminComponents/AddOrEditEmployeeModal.vue";
 import {axiosCalls} from "../../mixins/axiosCallsMixin";
 
 export default {
@@ -28,8 +28,8 @@ export default {
     inject: ["eventHub"],
 
     components: {
-        AddOrEditCoordinatorModal,
-        CoordinatorList,
+        AddOrEditEmployeeModal,
+        EmployeeList,
         Actions,
     },
 
@@ -43,43 +43,43 @@ export default {
         return {
             filter: "",
             adminPageData: null,
-            loadingCoordinators: false,
+            loadingEmployees: false,
         };
     },
 
     created() {
-        this.eventHub.$on("save-coordinators", (coordinatorData) => {
-            this.saveCoordinators(coordinatorData);
+        this.eventHub.$on("save-employees", (employeeData) => {
+            this.saveEmployees(employeeData);
         });
 
-        this.eventHub.$on("delete-coordinator", (coordinatorId) => {
-            this.deleteCoordinator(coordinatorId);
+        this.eventHub.$on("delete-employee", (tasklistId) => {
+            this.deleteEmployee(tasklistId);
         });
     },
 
     beforeDestroy() {
-        this.eventHub.$off('save-coordinators');
-        this.eventHub.$off('delete-coordinator');
+        this.eventHub.$off('save-employees');
+        this.eventHub.$off('delete-employee');
     },
 
     methods: {
-        saveCoordinators(coordinatorData) {
-            this.loadingCoordinators = true;
-            const cloneCoordinatorData = {...coordinatorData};
-            this.asyncCreateCoordinators(cloneCoordinatorData).then(res => {
-                this.asyncGetCoordinators().then((data) => {
-                    this.adminPageData.coordinators = data.data;
-                    this.loadingCoordinators = false;
+        saveEmployees(employeeData) {
+            this.loadingEmployees = true;
+            const cloneEmployeeData = {...employeeData};
+            this.asyncCreateEmployees(cloneEmployeeData).then(res => {
+                this.asyncGetEmployees().then((data) => {
+                    this.adminPageData.employees = data.data;
+                    this.loadingEmployees = false;
                 });
             });
         },
 
-        deleteCoordinator(coordinatorId) {
-            this.loadingCoordinators = true;
-            this.asyncDeleteCoordinator(coordinatorId).then(res => {
-                this.asyncGetCoordinators().then((data) => {
-                    this.adminPageData.coordinators = data.data;
-                    this.loadingCoordinators = false;
+        deleteEmployee(tasklistId) {
+            this.loadingEmployees = true;
+            this.asyncDeleteEmployee(tasklistId).then(res => {
+                this.asyncGetEmployees().then((data) => {
+                    this.adminPageData.employees = data.data;
+                    this.loadingEmployees = false;
                 });
             });
         },

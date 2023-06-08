@@ -4,7 +4,7 @@
 
         <div class="flex flex-wrap bg-gray-100">
             <div class="w-full p-6" v-if="$role === 'admin'">
-                <div @click="createCoordinators()"
+                <div @click="createEmployees()"
                      class="cursor-pointer bg-green-100 hover:bg-green-200 transition duration-300 ease-in-out border-b-4 border-green-500 rounded-lg shadow-xl p-5">
                     <div class="flex flex-row items-center">
                         <div class="flex-shrink pr-4">
@@ -13,9 +13,9 @@
                             </div>
                         </div>
                         <div class="flex-1 text-right md:text-center">
-                            <h5 class="font-bold uppercase text-gray-800">Add Coordinator</h5>
+                            <h5 class="font-bold uppercase text-gray-800">Add Employee</h5>
                             <h3 class="text-sm text-gray-600">
-                                {{ coordinatorsLength }} coordinators total </h3>
+                                {{ employeesLength }} employees total </h3>
                         </div>
                     </div>
                 </div>
@@ -33,14 +33,14 @@ export default {
     inject: ["eventHub"],
 
     props: {
-        coordinatorsLength: {
+        employeesLength: {
             type: Number,
             default: 0,
         },
     },
     methods: {
-        createCoordinators() {
-            this.eventHub.$emit(eventNames.createCoordinators);
+        createEmployees() {
+            this.eventHub.$emit(eventNames.createEmployees);
         },
     },
 };
