@@ -1,12 +1,12 @@
 /* eslint-disable no-undef*/
 
 import {createLocalVue, shallowMount} from '@vue/test-utils';
-import UserCard from '../../../../src/resources/js/components/dashboard/dashboardComponents/UserCard';
+import UserCard from '../../../../src/resources/js/components/dashboard/dashboardComponents/ContractCard.vue';
 import {supervisorMockData} from '../../../JsonMockData/supervisorMockData';
 
 const localVue = createLocalVue();
 
-describe('UserCard.vue', () => {
+describe('ContractCard.vue', () => {
 
     let wrapper;
 

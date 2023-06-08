@@ -2,15 +2,15 @@
 
 import {createLocalVue, shallowMount} from '@vue/test-utils';
 import AddOrEditCoordinatorModal
-    from '../../../../src/resources/js/components/admin/adminComponents/AddOrEditCoordinatorModal';
+    from '../../../../src/resources/js/components/admin/adminComponents/AddOrEditEmployeeModal.vue';
 import Vue from 'vue';
 import {eventNames} from '../../../../src/resources/js/enums/eventNames';
 
 const localVue = createLocalVue();
 
-describe('AddOrEditCoordinatorModal.vue', () => {
+describe('AddOrEditEmployeeModal.vue', () => {
 
-    // testing createCoordinators event
+    // testing createEmployeess event
 
     let wrapper;
 
@@ -29,41 +29,41 @@ describe('AddOrEditCoordinatorModal.vue', () => {
         });
     });
 
-    it('Checks that when an createCoordinators event is emitted without any option, it opens modals and sets default values', () => {
+    it('Checks that when an createEmployeess event is emitted without any option, it opens modals and sets default values', () => {
 
         expect(wrapper.vm.modalOpen).toBe(false);
-        wrapper.vm.eventHub.$emit(eventNames.createCoordinators);
+        wrapper.vm.eventHub.$emit(eventNames.createEmployeess);
         expect(wrapper.vm.modalOpen).toBe(true);
-        expect(wrapper.vm.coordinatorData.role).toEqual('employee');
-        expect(wrapper.vm.coordinatorData.id).toEqual(null);
+        expect(wrapper.vm.tasklistData.role).toEqual('employee');
+        expect(wrapper.vm.tasklistData.id).toEqual(null);
         expect(wrapper.vm.isEdit).toEqual(false);
 
     });
 
-    it('Checks that when an createCoordinators event is emitted without any option, it opens modals and sets default values', () => {
+    it('Checks that when an createEmployeess event is emitted without any option, it opens modals and sets default values', () => {
 
-        const coordinator = {
+        const tasklist = {
             role: 'test',
             id: 10,
             user: {id: 100}
         };
 
         expect(wrapper.vm.modalOpen).toBe(false);
-        wrapper.vm.eventHub.$emit(eventNames.createCoordinators, coordinator);
+        wrapper.vm.eventHub.$emit(eventNames.createEmployeess, tasklist);
         expect(wrapper.vm.modalOpen).toBe(true);
-        expect(wrapper.vm.coordinatorData.role).toEqual('test');
-        expect(wrapper.vm.coordinatorData.id).toEqual(10);
-        expect(wrapper.vm.coordinatorData.selectedUsers).toEqual([{id: 100}]);
-        expect(wrapper.vm.coordinatorData.user).toEqual({id: 100});
+        expect(wrapper.vm.tasklistData.role).toEqual('test');
+        expect(wrapper.vm.tasklistData.id).toEqual(10);
+        expect(wrapper.vm.tasklistData.selectedUsers).toEqual([{id: 100}]);
+        expect(wrapper.vm.tasklistData.user).toEqual({id: 100});
         expect(wrapper.vm.isEdit).toEqual(true);
 
     });
 
     // testing saveCoordinators function
 
-    it('Checks that when you save a coordinator the modal closes', () => {
+    it('Checks that when you save a tasklist the modal closes', () => {
 
-        wrapper.vm.coordinatorData = {
+        wrapper.vm.tasklistData = {
             id: null,
             role: 'employee',
             selectedUsers: []
@@ -74,9 +74,9 @@ describe('AddOrEditCoordinatorModal.vue', () => {
         expect(wrapper.vm.modalOpen).toBe(false);
     });
 
-    it('Checks that when try to save a coordinator without selecting a user, a toast message is shown', () => {
+    it('Checks that when try to save a tasklist without selecting a user, a toast message is shown', () => {
 
-        wrapper.vm.coordinatorData = {
+        wrapper.vm.tasklistData = {
             id: null,
             role: 'employee',
         };
@@ -89,13 +89,13 @@ describe('AddOrEditCoordinatorModal.vue', () => {
         expect(wrapper.vm.triggerErrorToast).toHaveBeenCalled();
     });
 
-    // testing deleteCoordinators function
+    // testing deleteEmployees function
 
-    it('Checks that when you delete a coordinator the modal closes', () => {
+    it('Checks that when you delete a tasklist the modal closes', () => {
 
         wrapper.vm.modalOpen = true;
         expect(wrapper.vm.modalOpen).toBe(true);
-        wrapper.vm.deleteCoordinator();
+        wrapper.vm.deleteEmployee();
         expect(wrapper.vm.modalOpen).toBe(false);
     });
 });

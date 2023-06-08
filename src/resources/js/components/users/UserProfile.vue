@@ -20,7 +20,7 @@
                             class="bg-green-500 py-1 px-2 rounded text-white text-sm">{{ this.status }}</span></span>
                     </li>
                     <li class="flex items-center py-3">
-                        <span>Coordinator app member since</span>
+                        <span>Tasklist app member since</span>
 
                         <span class="ml-auto">{{ this.memberSince }}</span>
                     </li>
@@ -62,13 +62,13 @@ export default {
     mixins: [axiosCalls],
 
     mounted() {
-        this.getCoordinatorProfileData();
+        this.getEmployeeProfileData();
     },
 
     methods: {
-        getCoordinatorProfileData() {
+        getEmployeeProfileData() {
             this.eventHub.$emit("set-loading-state", true);
-            this.asyncGetCoordinatorProfile().then((data) => {
+            this.asyncGetEmployeeProfile().then((data) => {
                 this.userName = data.data.data.userName;
                 this.status = data.data.data.userStatus;
                 this.memberSince = data.data.data.userCreatedAt;

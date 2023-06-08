@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\Repositories;
+namespace Xguard\Tasklist\Repositories;
 
 use App\Models\Contract;
 use Xguard\LaravelKanban\Entities\ErpContract;

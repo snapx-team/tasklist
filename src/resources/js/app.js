@@ -53,12 +53,12 @@ Vue.mixin({
             }
         },
 
-        $coordinatorIdSession: {
+        $tasklistIdSession: {
             get: function () {
-                return globalData.$data.$coordinatorId;
+                return globalData.$data.$tasklistId;
             },
             set: function (newEmployeeId) {
-                globalData.$data.$coordinatorId = newEmployeeId;
+                globalData.$data.$tasklistId = newEmployeeId;
             }
         }
     }
@@ -67,9 +67,9 @@ Vue.mixin({
 new Vue({
     router,
     mounted() {
-        axios.get('get-role-and-coordinator-id').then((data) => {
+        axios.get('get-role-and-employee-id').then((data) => {
             this.$role = data.data['role'];
-            this.$coordinatorIdSession = data.data['coordinator_id'];
+            this.$tasklistIdSession = data.data['tasklist_id'];
         });
     },
     render: (h) => h(App)

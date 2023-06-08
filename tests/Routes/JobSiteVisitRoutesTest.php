@@ -9,8 +9,8 @@ use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\JobSiteVisit;
-use Xguard\Coordinator\Models\SupervisorShift;
+use Xguard\Tasklist\Models\JobSiteVisit;
+use Xguard\Tasklist\Models\SupervisorShift;
 
 /**
  * @group supervisor
@@ -19,9 +19,9 @@ class JobSiteVisitRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const CREATE_JOB_SITE_SHIFT_VISIT = 'coordinator.create-job-site-visit';
-    const UPDATE_JOB_SITE_SHIFT_VISIT = 'coordinator.update-job-site-visit';
-    const DELETE_JOB_SITE_SHIFT_VISIT = 'coordinator.delete-job-site-visit';
+    const CREATE_JOB_SITE_SHIFT_VISIT = 'tasklist.create-job-site-visit';
+    const UPDATE_JOB_SITE_SHIFT_VISIT = 'tasklist.update-job-site-visit';
+    const DELETE_JOB_SITE_SHIFT_VISIT = 'tasklist.delete-job-site-visit';
     const JOB_SITE_ID = 'job_site_id';
     const ADDRESS = 'address';
     const FORMATTED_ADDRESS = 'formatted_address';

@@ -14,14 +14,14 @@ use Auth;
 use Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\Review;
-use Xguard\Coordinator\Repositories\OnSiteEmployeeRepository;
+use Xguard\Tasklist\Models\Review;
+use Xguard\Tasklist\Repositories\OnSiteEmployeeRepository;
 
 class OnSiteEmployeeRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    const GET_ON_SITE_EMPLOYEES = 'coordinator.get-on-site-employees';
+    const GET_ON_SITE_EMPLOYEES = 'tasklist.get-on-site-employees';
     const MAX_JOB_SITE = 10;
     const ZERO = 0;
     const EIGHT_HOURS = 8;

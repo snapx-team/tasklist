@@ -3,7 +3,7 @@
          :class=" !isSideBarOpen ? 'w-20': 'w-64' ">
 
         <div class="text-center text-white font-semibold flex justify-between items-center relative z-10 bg-purple-700">
-            <p v-if="isSideBarOpen" class="px-8"> Coordinator Plugin</p>
+            <p v-if="isSideBarOpen" class="px-8"> Tasklist Plugin</p>
             <div @click="toggleSidebar()"
                  class="p-4 cursor-pointer transition duration-300 ease-in-out rounded hover:bg-purple-800 hover:text-purple-200`"
                  :class=" { 'flex-auto': !isSideBarOpen  }">
@@ -19,9 +19,9 @@
                 <i class="fas fa-hard-hat fa-3x p-3 text-indigo-800"></i>
                 <div v-if="isSideBarOpen">
                     <h1 class="text-2xl tracking-wide text-indigo-800 font-bold my-0">
-                        XGUARD COORDINATOR </h1>
+                        XGUARD TASKLIST </h1>
                     <p class="text-xs text-indigo-800">
-                        View And Manage Supervisors</p>
+                        View And Manage Job Site Task Lists</p>
 
                 </div>
             </div>
@@ -31,7 +31,7 @@
                     :class=" !isSideBarOpen ? 'text-center text-xs': 'text-left text-sm' ">General</h3>
 
                 <div class="mt-2 -mx-3 pb-2" v-if="$role === 'admin'">
-                    <router-link :to="{ path: '/coordinator/admin' }"
+                    <router-link :to="{ path: '/tasklist/admin' }"
                                  class="flex items-center px-3 py-2 rounded-lg"
                                  :class="!isSideBarOpen ? 'mx-6 bg-gray-600 hover:bg-gray-500 justify-center': 'justify-between hover:bg-gray-200' ">
                         <span v-if="isSideBarOpen" class="text-sm font-medium text-gray-900"><i
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="-mx-3 pb-2">
-                    <router-link :to="{ path: '/coordinator' }"
+                    <router-link :to="{ path: '/tasklist' }"
                                  class="flex items-center px-3 py-2 rounded-lg"
                                  :class="!isSideBarOpen ? 'mx-6 bg-gray-600 hover:bg-gray-500 justify-center' : 'justify-between hover:bg-gray-200' ">
                         <span v-if="isSideBarOpen" class="text-sm font-medium text-gray-900"><i
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="-mx-3 pb-2">
-                    <router-link :to="{ path: '/coordinator/user-profile' }"
+                    <router-link :to="{ path: '/tasklist/user-profile' }"
                                  class="flex items-center px-3 py-2 rounded-lg"
                                  :class="!isSideBarOpen ? 'mx-6 bg-gray-600 hover:bg-gray-500 justify-center' : 'justify-between hover:bg-gray-200' ">
                         <span v-if="isSideBarOpen" class="text-sm font-medium text-gray-900"><i
@@ -68,7 +68,7 @@
                     <a href="/"
                        class="text-xs text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out focus:outline-none">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span v-if="isSideBarOpen" class="ml-1 font-bold">EXIT COORDINATOR PLUGIN</span>
+                        <span v-if="isSideBarOpen" class="ml-1 font-bold">EXIT TASKLIST PLUGIN</span>
                     </a>
                 </div>
             </nav>
@@ -79,6 +79,8 @@
 import Avatar from "../global/Avatar.vue";
 
 export default {
+
+    inject: ["eventHub"],
 
     components: {
         Avatar,
@@ -91,7 +93,7 @@ export default {
     },
 
     mounted() {
-        if (this.$device.mobile || this.$device.ios || this.$device.android || window.innerWidth < 1200) {
+        if (this.$device.mobile || this.$device.ios || this.$device.android || window.innerWidth < 1650) {
             this.isSideBarOpen = false;
         }
     },
@@ -99,6 +101,8 @@ export default {
     methods: {
         toggleSidebar() {
             this.isSideBarOpen = !this.isSideBarOpen;
+            this.eventHub.$emit("check-pane-size:contract");
+            this.eventHub.$emit("check-pane-size:jobSite");
         },
     }
 };

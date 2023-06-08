@@ -7,8 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
-use Xguard\Coordinator\Actions\CoordinatorProfileData\GetCoordinatorProfileAction;
-use Xguard\Coordinator\Models\Coordinator;
+use Xguard\Tasklist\Actions\EmployeeProfileData\GetEmployeeProfileAction;
+use Xguard\Tasklist\Models\Employee;
 
 class GetCoordinatorProfileActionTest extends TestCase
 {
@@ -20,16 +20,16 @@ class GetCoordinatorProfileActionTest extends TestCase
         parent::setUp();
         $this->user = factory(User::class)->create();
         Auth::setUser($this->user);
-        $this->coordinator = factory(Coordinator::class)->states('admin')->create(['user_id' => $this->user->id]);
-        session(['role' => 'admin', 'coordinator_id' => $this->coordinator->id]);
+        $this->tasklist = factory(Employee::class)->states('admin')->create(['user_id' => $this->user->id]);
+        session(['role' => 'admin', 'tasklist_id' => $this->tasklist->id]);
     }
 
     public function testGetUserProfileAction()
     {
-        $result = (new GetCoordinatorProfileAction)->run();
-        $this->assertEquals($this->coordinator->user->full_name, $result['userName']);
-        $this->assertEquals($this->coordinator->role, $result['userStatus']);
-        $this->assertEquals(Carbon::parse($this->coordinator->created_at)->toDateString(), $result['userCreatedAt']);
-        $this->assertEquals($this->coordinator->user->locale, $result['language']);
+        $result = (new GetEmployeeProfileAction)->run();
+        $this->assertEquals($this->tasklist->user->full_name, $result['userName']);
+        $this->assertEquals($this->tasklist->role, $result['userStatus']);
+        $this->assertEquals(Carbon::parse($this->tasklist->created_at)->toDateString(), $result['userCreatedAt']);
+        $this->assertEquals($this->tasklist->user->locale, $result['language']);
     }
 }

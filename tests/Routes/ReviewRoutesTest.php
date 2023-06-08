@@ -8,7 +8,7 @@ use Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Xguard\Coordinator\Models\Review;
+use Xguard\Tasklist\Models\Review;
 
 /**
  * @group supervisor
@@ -17,9 +17,9 @@ class ReviewRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const CREATE_REVIEW = 'coordinator.create-review';
-    const UPDATE_REVIEW = 'coordinator.update-review';
-    const DELETE_REVIEW = 'coordinator.delete-review';
+    const CREATE_REVIEW = 'tasklist.create-review';
+    const UPDATE_REVIEW = 'tasklist.update-review';
+    const DELETE_REVIEW = 'tasklist.delete-review';
     const ID = 'id';
     const TEST_NOTE = 'test note';
     const RATING_3 = 3;
