@@ -9,7 +9,7 @@ jobs: # a collection of steps
       #- image: circleci/mysql:5.7
     resource_class: medium
     parallelism: 2
-    working_directory: ~/coordinator
+    working_directory: ~/tasklist
 
     steps:
       - checkout
@@ -37,31 +37,31 @@ jobs: # a collection of steps
           paths:
             - ./vendor
 
-      # Create and move coordinator plugin into the xguard-schedule/packages/xguard-coordinator/ directory
+      # Create and move tasklist plugin into the xguard-schedule/packages/tasklist/ directory
       - run: cd ~/xguard-schedule && sudo mkdir packages
-      - run: cd ~/xguard-schedule/packages && sudo mkdir xguard-coordinator
-      - run: sudo rm -r ~/xguard-schedule/vendor/xguard/xguard-coordinator/*
-      - run: cd .. && sudo cp -r ~/coordinator/* ~/xguard-schedule/packages/xguard-coordinator/
-      - run: cd .. && sudo cp -r ~/coordinator/* ~/xguard-schedule/vendor/xguard/xguard-coordinator/
+      - run: cd ~/xguard-schedule/packages && sudo mkdir tasklist
+      - run: sudo rm -r ~/xguard-schedule/vendor/xguard/tasklist/*
+      - run: cd .. && sudo cp -r ~/tasklist/* ~/xguard-schedule/packages/tasklist/
+      - run: cd .. && sudo cp -r ~/tasklist/* ~/xguard-schedule/vendor/xguard/tasklist/
 
       # Run php unit tests
       - run:
           name: "Run Tests in Parallel"
           command: |
-            cd ~/xguard-schedule && phpdbg -d memory_limit=64G -qrr vendor/bin/paratest -p2 packages/xguard-coordinator/tests
+            cd ~/xguard-schedule && phpdbg -d memory_limit=64G -qrr vendor/bin/paratest -p2 packages/tasklist/tests
 
       #Jest
 
       - run:
           name: "install dependencies"
           command: |
-            cd ~/xguard-schedule/packages/xguard-coordinator && sudo npm install
+            cd ~/xguard-schedule/packages/tasklist && sudo npm install
 
 
       - run:
           name: "Run Frontend Jest Tests"
           command: |
-            cd ~/xguard-schedule/packages/xguard-coordinator && sudo npm test
+            cd ~/xguard-schedule/packages/tasklist && sudo npm test
 
 
 

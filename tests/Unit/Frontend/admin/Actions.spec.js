@@ -8,9 +8,9 @@ import {eventNames} from '../../../../src/resources/js/enums/eventNames';
 
 const localVue = createLocalVue();
 
-describe('AddOrEditCoordinatorModal.vue', () => {
+describe('AddOrEditEmployeeModal.vue', () => {
 
-    // testing createCoordinators event
+    // testing createEmployeess event
 
     let wrapper;
 
@@ -29,11 +29,11 @@ describe('AddOrEditCoordinatorModal.vue', () => {
         });
     });
 
-    it('Checks that fires createCoordinators event', () => {
+    it('Checks that fires createEmployeess event', () => {
 
         jest.spyOn(wrapper.vm.eventHub, '$emit');
-        wrapper.vm.createCoordinators();
+        wrapper.vm.createEmployeess();
         expect(wrapper.vm.eventHub.$emit).toHaveBeenCalledTimes(1);
-        expect(wrapper.vm.eventHub.$emit).toHaveBeenCalledWith(eventNames.createCoordinators);
+        expect(wrapper.vm.eventHub.$emit).toHaveBeenCalledWith(eventNames.createEmployeess);
     });
 });

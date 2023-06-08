@@ -1,5 +1,5 @@
 {
-    "name": "xguard/xguard-coordinator",
+    "name": "xguard/tasklist",
     "description": "A plugin to manage supervisors on the XGuard ERP",
     "license": "MIT",
     "authors": [

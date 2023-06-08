@@ -1,18 +1,18 @@
 <?php
 
-namespace Xguard\Coordinator\Http\Controllers;
+namespace Xguard\Tasklist\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Collection;
-use Xguard\Coordinator\Repositories\ErpContractsRepository;
-use Xguard\Coordinator\Repositories\ErpUsersRepository;
-use Xguard\Coordinator\Repositories\OnSiteEmployeeRepository;
+use Xguard\Tasklist\Repositories\ErpContractsRepository;
+use Xguard\Tasklist\Repositories\ErpUsersRepository;
+use Xguard\Tasklist\Repositories\OnSiteEmployeeRepository;
 
 /**
  * Class ErpController
- * @package Xguard\Coordinator\Http\Controllers
- * @group Coordinator Plugin
+ * @package Xguard\Tasklist\Http\Controllers
+ * @group Employee Plugin
  */
 class ErpController extends Controller
 {
@@ -29,7 +29,7 @@ class ErpController extends Controller
 
     /**
      * Get Active Contracts
-     * @responseFile public/vendor/xguard-coordinator/scribeResponses/getActiveContracts.json
+     * @responseFile public/vendor/tasklist/scribeResponses/getActiveContracts.json
      */
     public function getAllActiveContracts(): array
     {
@@ -38,19 +38,10 @@ class ErpController extends Controller
 
     /**
      * Get Active Contracts With Search Term
-     * @responseFile public/vendor/xguard-coordinator/scribeResponses/getActiveContracts.json
+     * @responseFile public/vendor/tasklist/scribeResponses/getActiveContracts.json
      */
     public function getSomeActiveContracts($search): array
     {
         return ErpContractsRepository::getSomeActiveContracts($search);
-    }
-
-    /**
-     * Get On Site Employees
-     * @responseFile public/vendor/xguard-coordinator/scribeResponses/getOnSiteEmployees.json
-     */
-    public function getOnSiteEmployees(int $id, bool $isPrimaryAddress)
-    {
-        return OnSiteEmployeeRepository::getOnSiteEmployees($id, $isPrimaryAddress);
     }
 }

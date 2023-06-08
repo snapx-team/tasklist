@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\Http\Requests;
+namespace Xguard\Tasklist\Http\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;

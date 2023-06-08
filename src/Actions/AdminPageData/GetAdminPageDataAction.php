@@ -1,16 +1,15 @@
 <?php
 
-namespace Xguard\Coordinator\Actions\AdminPageData;
+namespace Xguard\Tasklist\Actions\AdminPageData;
 
 use Lorisleiva\Actions\Action;
-use Xguard\Coordinator\Models\Coordinator;
-use Xguard\Coordinator\Enums\Roles;
-use Xguard\Coordinator\Enums\SessionVariables;
+use Xguard\Tasklist\Models\Employee;
+use Xguard\Tasklist\Enums\Roles;
+use Xguard\Tasklist\Enums\SessionVariables;
 
 class GetAdminPageDataAction extends Action
 {
-
-    const COORDINATORS = 'coordinators';
+    const EMPLOYEES = 'employees';
 
     public function authorize(): bool
     {
@@ -19,10 +18,10 @@ class GetAdminPageDataAction extends Action
 
     public function handle(): array
     {
-        $coordinators = Coordinator::with(Coordinator::USER_RELATION_NAME)->get();
+        $employees = Employee::with(Employee::USER_RELATION_NAME)->get();
 
         return [
-            self::COORDINATORS => $coordinators,
+            self::EMPLOYEES => $employees,
         ];
     }
 }

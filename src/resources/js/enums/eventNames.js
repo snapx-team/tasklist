@@ -1,4 +1,4 @@
 
 export const eventNames = {
-    createCoordinators: 'create-coordinators',
+    createEmployees: 'create-employees',
 };

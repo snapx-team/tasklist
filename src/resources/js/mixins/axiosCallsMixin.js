@@ -4,7 +4,7 @@ export const axiosCalls = {
 
     methods: {
 
-        // Coordinator App Data
+        // App Data
 
         asyncGetAdminPageData() {
             return axios.get('get-admin-page-data').catch((error) => {
@@ -12,20 +12,52 @@ export const axiosCalls = {
             });
         },
 
-        asyncGetSupervisorsData(dateRange) {
-            return axios.get('get-supervisors-data', {
-                params: {
-                    start: dateRange[0],
-                    end: dateRange[1]
-                }}).catch((error) => {
+        // Tasks
+
+        asyncCreateTask(taskData) {
+            return axios.post('create-task', taskData).then(() => {
+                this.triggerSuccessToast('Task Added');
+            }).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
             });
         },
 
-        // Coordinators
+        asyncDeleteTask(taskId) {
+            return axios.post('delete-task/' + taskId).then(() => {
+                this.triggerSuccessToast('Task Removed');
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
 
-        asyncGetCoordinatorProfile() {
-            return axios.get('get-coordinator-profile').catch((error) => {
+        asyncGetGlobalContractTasks(contractId) {
+            return axios.get('get-global-contract-tasks/' + contractId).then((res) => {
+                return res.data.data;
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
+        asyncGetJobSiteTasks(jobSiteId) {
+            return axios.get('get-job-site-tasks/' + jobSiteId).then((res) => {
+                return res.data.data;
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
+        // Contracts
+
+        asyncGetAllActiveContracts() {
+            return axios.get('get-all-active-contracts').catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
+        // Employees
+
+        asyncGetEmployeeProfile() {
+            return axios.get('get-employee-profile').catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
             });
         },
@@ -47,42 +79,24 @@ export const axiosCalls = {
             });
         },
 
-        asyncGetCoordinators() {
-            return axios.get('get-coordinators').catch((error) => {
+        asyncGetEmployees() {
+            return axios.get('get-employees').catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
             });
         },
 
-        asyncCreateCoordinators(coordinatorData) {
-            return axios.post('create-coordinators', coordinatorData).then(() => {
-                this.triggerSuccessToast('Coordinator Added!');
+        asyncCreateEmployees(employeeData) {
+            return axios.post('create-employees', employeeData).then(() => {
+                this.triggerSuccessToast('Employee Added!');
             }).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
             });
         },
 
-        asyncDeleteCoordinator(employeeId) {
-            return axios.post('delete-coordinator/' + employeeId).then(() => {
-                this.triggerSuccessToast('Coordinator Removed');
+        asyncDeleteEmployee(employeeId) {
+            return axios.post('delete-employee/' + employeeId).then(() => {
+                this.triggerSuccessToast('Employee Removed');
             }).catch((error) => {
-                this.loopAllErrorsAsTriggerErrorToast(error);
-            });
-        },
-
-        asyncGetUserShiftOdometerImages(userId, shiftId) {
-            return axios.get('get-user-shift-odometer-images/' + userId + '/' + shiftId).catch((error) => {
-                this.loopAllErrorsAsTriggerErrorToast(error);
-            });
-        },
-
-        // Location
-
-        asyncGetLocationPathData(supervisorShiftId, distanceThreshold, timeThreshold) {
-            return axios.get('get-location-pings/' + supervisorShiftId, {
-                params: {
-                    distanceThreshold: distanceThreshold,
-                    timeThreshold: timeThreshold
-                }}).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
             });
         },

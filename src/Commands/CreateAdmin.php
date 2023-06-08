@@ -1,10 +1,10 @@
 <?php
 
-namespace Xguard\Coordinator\Commands;
+namespace Xguard\Tasklist\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Xguard\Coordinator\Models\Coordinator;
+use Xguard\Tasklist\Models\Employee;
 
 class CreateAdmin extends Command
 {
@@ -13,7 +13,7 @@ class CreateAdmin extends Command
      *
      * @var string
      */
-    protected $signature = 'coordinator-app:create-admin';
+    protected $signature = 'tasklist:create-admin';
 
     /**
      * The console command description.
@@ -42,7 +42,7 @@ class CreateAdmin extends Command
         $email = $this->ask('ERP email:');
         $user = User::where('email', $email) -> first();
 
-        Coordinator::create([
+        Employee::create([
             'user_id' => $user->id,
             'role' => 'admin',
         ]);

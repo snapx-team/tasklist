@@ -6,8 +6,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
-use Xguard\Coordinator\Actions\Coordinators\CreateOrUpdateCoordinatorAction;
-use Xguard\Coordinator\Models\Coordinator;
+use Xguard\Tasklist\Actions\Employees\CreateOrUpdateEmployeeAction;
+use Xguard\Tasklist\Models\Employee;
 
 class CreateOrUpdateCoordinatorActionTest extends TestCase
 {
@@ -17,16 +17,16 @@ class CreateOrUpdateCoordinatorActionTest extends TestCase
     {
         parent::setUp();
         $user = factory(User::class)->create();
-        $coordinator = factory(Coordinator::class)->states('admin')->create(['user_id' => $user->id,]);
+        $tasklist = factory(Employee::class)->states('admin')->create(['user_id' => $user->id,]);
         Auth::setUser($user);
-        session(['role' => 'admin', 'coordinator_id' => $coordinator->id]);
+        session(['role' => 'admin', 'tasklist_id' => $tasklist->id]);
     }
 
     public function testCreateOrUpdateCoordinatorActionTest()
     {
         $users = factory(User::class, 2)->create();
-        factory(Coordinator::class)->states('admin')->create(['user_id' => $users[0]->id]);
-        app(CreateOrUpdateCoordinatorAction::class)->fill([
+        factory(Employee::class)->states('admin')->create(['user_id' => $users[0]->id]);
+        app(CreateOrUpdateEmployeeAction::class)->fill([
             'selectedUsers' => [
                 [
                     'id' => $users[0]->id,
@@ -38,7 +38,7 @@ class CreateOrUpdateCoordinatorActionTest extends TestCase
             'role' => 'admin'
         ])->run();
 
-        $this->assertDatabaseHas('sa_coordinators', ['user_id' => $users[0]->id]);
-        $this->assertDatabaseHas('sa_coordinators', ['user_id' => $users[1]->id]);
+        $this->assertDatabaseHas('sa_tasklists', ['user_id' => $users[0]->id]);
+        $this->assertDatabaseHas('sa_tasklists', ['user_id' => $users[1]->id]);
     }
 }

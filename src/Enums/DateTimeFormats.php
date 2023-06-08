@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\Enums;
+namespace Xguard\Tasklist\Enums;
 
 use MyCLabs\Enum\Enum;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Xguard\Coordinator\AWSStorage;
+namespace Xguard\Tasklist\AWSStorage;
 
 use \Illuminate\Contracts\Filesystem\Filesystem;
 
