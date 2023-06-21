@@ -1,7 +1,12 @@
 <template>
     <div>
         <div :class="`flex justify-between p-2 bg-${color}-800`">
-            <div class="leading-5">
+            <div v-if="type === 'contract'" class="leading-5">
+                <h1 class="text-white">Global Contract Tasks</h1>
+                <small class="text-gray-400 text-xs"> Tasks for all job sites</small>
+            </div>
+
+            <div v-else class="leading-5">
                 <h1 class="text-white">Job Site Tasks</h1>
                 <small class="text-gray-400 text-xs"> Job site specific tasks</small>
             </div>
@@ -101,7 +106,7 @@
                                             <span>{{ day.lowerCaseName }}</span><span
                                         v-if="index !== Object.keys(selectedDaysOfWeek).length - 1">, </span>
                                         </span>
-                                    <span> at {{ selectedTime }} </span>
+                                    <span> at {{ formattedSelectedTime }} </span>
                                 </div>
                                 <div v-else-if="isRecurring && selectedDaysOfWeek.length === 0">
                                     <p class="font-semibold ">No days of week selected</p>
@@ -147,6 +152,7 @@ import JobSiteCard from "./JobSiteCard"
 import {axiosCalls} from "../../../mixins/axiosCallsMixin";
 import LoadingAnimation from "../../global/LoadingAnimation";
 import Badge from "../../global/Badge.vue";
+import moment from 'moment';
 
 export default {
     inject: ["eventHub"],
@@ -220,7 +226,7 @@ export default {
             if (this.type === "contract") {
                 return {
                     contractId: this.selectedItem.id,
-                    jobSiteId: null,
+                    jobSiteAddressId: null,
                     selectedDaysOfWeek: this.selectedDaysOfWeek,
                     selectedTime: this.selectedItem,
                     isRecurring: this.isRecurring,
@@ -230,7 +236,7 @@ export default {
             } else if (this.type === "jobSite") {
                 return {
                     contractId: this.selectedItem.contract.id,
-                    jobSiteId: this.selectedItem.contractJobSite.id,
+                    jobSiteAddressId: this.selectedItem.contractJobSite.id,
                     selectedDaysOfWeek: this.selectedDaysOfWeek,
                     selectedTime: this.selectedItem,
                     isRecurring: this.isRecurring,
@@ -238,6 +244,10 @@ export default {
                     time:this.selectedTime
                 }
             }
+        },
+
+        formattedSelectedTime() {
+            return moment(this.selectedTime).format('HH:mm');
         },
     },
 }

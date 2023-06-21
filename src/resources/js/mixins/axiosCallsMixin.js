@@ -30,6 +30,15 @@ export const axiosCalls = {
             });
         },
 
+
+        asyncEditTask(taskId, description) {
+            return axios.post('edit-task/' + taskId, {description}).then(() => {
+                this.triggerSuccessToast('Task Edited');
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
         asyncGetGlobalContractTasks(contractId) {
             return axios.get('get-global-contract-tasks/' + contractId).then((res) => {
                 return res.data.data;
@@ -38,8 +47,8 @@ export const axiosCalls = {
             });
         },
 
-        asyncGetJobSiteTasks(jobSiteId) {
-            return axios.get('get-job-site-tasks/' + jobSiteId).then((res) => {
+        asyncGetJobSiteTasks(jobSiteAddressId) {
+            return axios.get('get-job-site-tasks/' + jobSiteAddressId).then((res) => {
                 return res.data.data;
             }).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);

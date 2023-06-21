@@ -30,6 +30,7 @@ Route::group(['prefix' => 'tasklist', 'as' => 'tasklist'], function () {
                 // Tasks
                 Route::post('/create-task', 'TaskController@createTask');
                 Route::post('/delete-task/{id}', 'TaskController@deleteTask');
+                Route::post('/edit-task/{id}', 'TaskController@editTask');
                 Route::get('/get-global-contract-tasks/{id}', 'TaskController@getGlobalContractTasks');
                 Route::get('/get-job-site-tasks/{id}', 'TaskController@getJobSiteTasks');
 

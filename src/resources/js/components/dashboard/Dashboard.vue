@@ -81,29 +81,6 @@ export default {
             componentKey: 0,
             selectedDateRange: [moment().startOf('week').toDate(), new Date()],
             jobSitePaneIsVisible: false,
-            shortcuts: [
-                {text: 'Today', onClick: () => [new Date(), new Date()]},
-                {
-                    text: 'Yesterday',
-                    onClick: () => [moment().subtract(1, 'day').toDate(), new Date()]
-                },
-                {
-                    text: 'Start of Week',
-                    onClick: () => [moment().startOf('week').toDate(), new Date()]
-                },
-                {
-                    text: 'Start of Month',
-                    onClick: () => [moment().startOf('month').toDate(), new Date()]
-                },
-                {
-                    text: 'Last Week',
-                    onClick: () => [moment().subtract(1, 'week').toDate(), new Date()]
-                },
-                {
-                    text: 'Last Month',
-                    onClick: () => [moment().subtract(1, 'month').toDate(), new Date()]
-                }
-            ],
         };
     },
 
@@ -144,11 +121,6 @@ export default {
             });
         },
 
-        updateDateRange() {
-            this.getContractsData();
-            this.componentKey++
-        },
-
         toggleContractsList() {
             this.contractsListIsVisible = !this.contractsListIsVisible
             this.eventHub.$emit("check-pane-size:contract");
@@ -165,13 +137,10 @@ export default {
             this.selectedContract = contract;
             this.selectedJobSite = null;
             this.jobSitePaneIsVisible = false;
-            this.eventHub.$emit("reload-tasks:contract");
         },
         setSelectedJobSite(contractJobSiteData) {
             this.selectedJobSite = contractJobSiteData;
             this.jobSitePaneIsVisible = true;
-            this.eventHub.$emit("reload-tasks:jobSite");
-
         },
     },
 };

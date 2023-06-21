@@ -18,7 +18,7 @@ class Task extends Model
 
     const ID = 'id';
     const CONTRACT_ID = 'contract_id';
-    const JOB_SITE_ID = 'job_site_id';
+    const JOB_SITE_ADDRESS_ID = 'job_site_address_id';
     const IS_RECURRING = 'is_recurring';
     const TIME = 'time';
     const TASK_RECURRENCE_RELATION_NAME = 'taskRecurrence';

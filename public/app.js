@@ -7434,38 +7434,7 @@ __webpack_require__.r(__webpack_exports__);
       selectedJobSite: null,
       componentKey: 0,
       selectedDateRange: [moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('week').toDate(), new Date()],
-      jobSitePaneIsVisible: false,
-      shortcuts: [{
-        text: 'Today',
-        onClick: function onClick() {
-          return [new Date(), new Date()];
-        }
-      }, {
-        text: 'Yesterday',
-        onClick: function onClick() {
-          return [moment__WEBPACK_IMPORTED_MODULE_4___default()().subtract(1, 'day').toDate(), new Date()];
-        }
-      }, {
-        text: 'Start of Week',
-        onClick: function onClick() {
-          return [moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('week').toDate(), new Date()];
-        }
-      }, {
-        text: 'Start of Month',
-        onClick: function onClick() {
-          return [moment__WEBPACK_IMPORTED_MODULE_4___default()().startOf('month').toDate(), new Date()];
-        }
-      }, {
-        text: 'Last Week',
-        onClick: function onClick() {
-          return [moment__WEBPACK_IMPORTED_MODULE_4___default()().subtract(1, 'week').toDate(), new Date()];
-        }
-      }, {
-        text: 'Last Month',
-        onClick: function onClick() {
-          return [moment__WEBPACK_IMPORTED_MODULE_4___default()().subtract(1, 'month').toDate(), new Date()];
-        }
-      }]
+      jobSitePaneIsVisible: false
     };
   },
   created: function created() {
@@ -7505,10 +7474,6 @@ __webpack_require__.r(__webpack_exports__);
         _this2.eventHub.$emit("set-loading-state", false);
       });
     },
-    updateDateRange: function updateDateRange() {
-      this.getContractsData();
-      this.componentKey++;
-    },
     toggleContractsList: function toggleContractsList() {
       this.contractsListIsVisible = !this.contractsListIsVisible;
       this.eventHub.$emit("check-pane-size:contract");
@@ -7523,12 +7488,10 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedContract = contract;
       this.selectedJobSite = null;
       this.jobSitePaneIsVisible = false;
-      this.eventHub.$emit("reload-tasks:contract");
     },
     setSelectedJobSite: function setSelectedJobSite(contractJobSiteData) {
       this.selectedJobSite = contractJobSiteData;
       this.jobSitePaneIsVisible = true;
-      this.eventHub.$emit("reload-tasks:jobSite");
     }
   }
 });
@@ -7719,6 +7682,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mixins_axiosCallsMixin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../mixins/axiosCallsMixin */ "./src/resources/js/mixins/axiosCallsMixin.js");
 /* harmony import */ var _global_LoadingAnimation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../global/LoadingAnimation */ "./src/resources/js/components/global/LoadingAnimation.vue");
 /* harmony import */ var _global_Badge_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../global/Badge.vue */ "./src/resources/js/components/global/Badge.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 //
 //
 //
@@ -7862,6 +7827,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+
 
 
 
@@ -7946,7 +7917,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type === "contract") {
         return {
           contractId: this.selectedItem.id,
-          jobSiteId: null,
+          jobSiteAddressId: null,
           selectedDaysOfWeek: this.selectedDaysOfWeek,
           selectedTime: this.selectedItem,
           isRecurring: this.isRecurring,
@@ -7956,7 +7927,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.type === "jobSite") {
         return {
           contractId: this.selectedItem.contract.id,
-          jobSiteId: this.selectedItem.contractJobSite.id,
+          jobSiteAddressId: this.selectedItem.contractJobSite.id,
           selectedDaysOfWeek: this.selectedDaysOfWeek,
           selectedTime: this.selectedItem,
           isRecurring: this.isRecurring,
@@ -7964,6 +7935,9 @@ __webpack_require__.r(__webpack_exports__);
           time: this.selectedTime
         };
       }
+    },
+    formattedSelectedTime: function formattedSelectedTime() {
+      return moment__WEBPACK_IMPORTED_MODULE_4___default()(this.selectedTime).format('HH:mm');
     }
   }
 });
@@ -8154,7 +8128,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.isLoadingTasks = false;
         });
       } else if (this.type === "jobSite") {
-        this.asyncGetJobSiteTasks(this.typeData.jobSiteId).then(function (data) {
+        this.asyncGetJobSiteTasks(this.typeData.jobSiteAddressId).then(function (data) {
           _this3.tasks = data;
           _this3.isLoadingTasks = false;
         });
@@ -8166,7 +8140,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.type === "contract") {
         return {
           contractId: this.selectedItem.id,
-          jobSiteId: null,
+          jobSiteAddressId: null,
           color: 'purple',
           title: this.selectedItem.name,
           subTitle: this.selectedItem.jobSiteType ? this.selectedItem.jobSiteType : 'Job site type undefined'
@@ -8174,7 +8148,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.type === "jobSite") {
         return {
           contractId: this.selectedItem.id,
-          jobSiteId: this.selectedItem.contractJobSite.id,
+          jobSiteAddressId: this.selectedItem.contractJobSite.id,
           color: 'green',
           title: this.selectedItem.contractJobSite.address,
           subTitle: this.selectedItem.contractJobSite.isPrimaryAddress ? 'Primary Address' : 'Secondary Address'
@@ -8244,6 +8218,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -8252,6 +8229,7 @@ __webpack_require__.r(__webpack_exports__);
     Badge: _global_Badge_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   mixins: [_mixins_axiosCallsMixin__WEBPACK_IMPORTED_MODULE_1__["axiosCalls"]],
+  inject: ["eventHub"],
   props: {
     task: {
       type: Object
@@ -8275,6 +8253,79 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    deleteTask: function deleteTask() {
+      var _this = this;
+
+      this.$swal({
+        icon: 'warning',
+        title: 'Are you sure you want to delete this?',
+        text: this.task.description,
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm() {
+          return _this.asyncDeleteTask(_this.task.id).then(function () {
+            if (_this.type === 'contract') {
+              _this.eventHub.$emit("reload-tasks:contract");
+            } else if (_this.type === 'jobSite') {
+              _this.eventHub.$emit("reload-tasks:jobSite");
+            }
+          })["catch"](function (error) {
+            _this.$swal({
+              icon: 'warning',
+              title: 'Could not delete task',
+              text: error,
+              showCancelButton: true,
+              confirmButtonText: "Return To Dashboard"
+            });
+          });
+        }
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this.modalOpen = false;
+        }
+      });
+    },
+    editTask: function editTask() {
+      var _this2 = this;
+
+      this.$swal({
+        title: 'Edit Task Description',
+        text: 'If you need to change the time or date, please delete this one and create a new task.',
+        input: 'text',
+        inputValue: this.task.description,
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Confirm Edit',
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(newDescription) {
+          return _this2.asyncEditTask(_this2.task.id, newDescription).then(function () {
+            if (_this2.type === 'contract') {
+              _this2.eventHub.$emit("reload-tasks:contract");
+            } else if (_this2.type === 'jobSite') {
+              _this2.eventHub.$emit("reload-tasks:jobSite");
+            }
+          })["catch"](function (error) {
+            _this2.$swal({
+              icon: 'warning',
+              title: 'Could not edit task',
+              text: error,
+              showCancelButton: true,
+              confirmButtonText: "Return To Dashboard"
+            });
+          });
+        },
+        allowOutsideClick: function allowOutsideClick() {
+          return !_this2.$swal.isLoading();
+        }
+      }).then(function (result) {
+        if (result.isConfirmed) {
+          _this2.modalOpen = false;
+        }
+      });
+    },
     isDaySelected: function isDaySelected(day) {
       return this.task.taskRecurrence.some(function (d) {
         return d.dayOfWeekId === day.id;
@@ -38507,7 +38558,7 @@ var render = function () {
             _vm.panelName === _vm.panelNames.jobSites
               ? _c(
                   "div",
-                  { key: "2", staticClass: "block" },
+                  { staticClass: "block" },
                   _vm._l(
                     _vm.selectedContract.addresses,
                     function (addressData, index) {
@@ -38566,7 +38617,23 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { class: "flex justify-between p-2 bg-" + _vm.color + "-800" }, [
-      _vm._m(0),
+      _vm.type === "contract"
+        ? _c("div", { staticClass: "leading-5" }, [
+            _c("h1", { staticClass: "text-white" }, [
+              _vm._v("Global Contract Tasks"),
+            ]),
+            _vm._v(" "),
+            _c("small", { staticClass: "text-gray-400 text-xs" }, [
+              _vm._v(" Tasks for all job sites"),
+            ]),
+          ])
+        : _c("div", { staticClass: "leading-5" }, [
+            _c("h1", { staticClass: "text-white" }, [_vm._v("Job Site Tasks")]),
+            _vm._v(" "),
+            _c("small", { staticClass: "text-gray-400 text-xs" }, [
+              _vm._v(" Job site specific tasks"),
+            ]),
+          ]),
       _vm._v(" "),
       _vm.type === "jobSite"
         ? _c("div", [
@@ -38861,7 +38928,9 @@ var render = function () {
                                 _vm._v(" "),
                                 _c("span", [
                                   _vm._v(
-                                    " at " + _vm._s(_vm.selectedTime) + " "
+                                    " at " +
+                                      _vm._s(_vm.formattedSelectedTime) +
+                                      " "
                                   ),
                                 ]),
                               ],
@@ -38958,20 +39027,7 @@ var render = function () {
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "leading-5" }, [
-      _c("h1", { staticClass: "text-white" }, [_vm._v("Job Site Tasks")]),
-      _vm._v(" "),
-      _c("small", { staticClass: "text-gray-400 text-xs" }, [
-        _vm._v(" Job site specific tasks"),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -39210,7 +39266,7 @@ var render = function () {
                       _vm._s(
                         _vm._f("moment")(
                           _vm.task.time,
-                          "DD MMM, YYYY - HH:MM a"
+                          "DD MMM, YYYY - HH:mm a"
                         )
                       )
                   ),
@@ -39219,7 +39275,7 @@ var render = function () {
               ? _c("p", { staticClass: "text-sm text-gray-600" }, [
                   _vm._v(
                     "at\n                    " +
-                      _vm._s(_vm._f("moment")(_vm.task.time, "HH:MM a"))
+                      _vm._s(_vm._f("moment")(_vm.task.time, "HH:mm a"))
                   ),
                 ])
               : _vm._e(),
@@ -39227,36 +39283,39 @@ var render = function () {
         ]),
       ]),
       _vm._v(" "),
-      _vm._m(0),
+      _c("div", { staticClass: "flex flex-col items-stretch" }, [
+        _c(
+          "button",
+          {
+            staticClass:
+              "flex-1 p-2 bg-blue-300 text-white rounded-tr hover:bg-blue-400 text-sm",
+            on: {
+              click: function ($event) {
+                return _vm.editTask()
+              },
+            },
+          },
+          [_c("i", { staticClass: "fas fa-edit" })]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass:
+              "flex-1 p-2 bg-red-300 text-white rounded-br hover:bg-red-400 text-sm",
+            on: {
+              click: function ($event) {
+                return _vm.deleteTask()
+              },
+            },
+          },
+          [_c("i", { staticClass: "fas fa-trash-alt" })]
+        ),
+      ]),
     ]
   )
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "flex flex-col items-stretch" }, [
-      _c(
-        "button",
-        {
-          staticClass:
-            "flex-1 p-2 bg-blue-300 text-white rounded-tr hover:bg-blue-400 text-sm",
-        },
-        [_c("i", { staticClass: "fas fa-edit" })]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass:
-            "flex-1 p-2 bg-red-300 text-white rounded-br hover:bg-red-400 text-sm",
-        },
-        [_c("i", { staticClass: "fas fa-trash-alt" })]
-      ),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -70186,83 +70245,94 @@ var axiosCalls = {
         _this3.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    asyncGetGlobalContractTasks: function asyncGetGlobalContractTasks(contractId) {
+    asyncEditTask: function asyncEditTask(taskId, description) {
       var _this4 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-global-contract-tasks/' + contractId).then(function (res) {
-        return res.data.data;
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('edit-task/' + taskId, {
+        description: description
+      }).then(function () {
+        _this4.triggerSuccessToast('Task Edited');
       })["catch"](function (error) {
         _this4.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    asyncGetJobSiteTasks: function asyncGetJobSiteTasks(jobSiteId) {
+    asyncGetGlobalContractTasks: function asyncGetGlobalContractTasks(contractId) {
       var _this5 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-job-site-tasks/' + jobSiteId).then(function (res) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-global-contract-tasks/' + contractId).then(function (res) {
         return res.data.data;
       })["catch"](function (error) {
         _this5.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    // Contracts
-    asyncGetAllActiveContracts: function asyncGetAllActiveContracts() {
+    asyncGetJobSiteTasks: function asyncGetJobSiteTasks(jobSiteAddressId) {
       var _this6 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-all-active-contracts')["catch"](function (error) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-job-site-tasks/' + jobSiteAddressId).then(function (res) {
+        return res.data.data;
+      })["catch"](function (error) {
         _this6.loopAllErrorsAsTriggerErrorToast(error);
+      });
+    },
+    // Contracts
+    asyncGetAllActiveContracts: function asyncGetAllActiveContracts() {
+      var _this7 = this;
+
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-all-active-contracts')["catch"](function (error) {
+        _this7.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
     // Employees
     asyncGetEmployeeProfile: function asyncGetEmployeeProfile() {
-      var _this7 = this;
-
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-employee-profile')["catch"](function (error) {
-        _this7.loopAllErrorsAsTriggerErrorToast(error);
-      });
-    },
-    asyncGetAllUsers: function asyncGetAllUsers() {
       var _this8 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-all-users')["catch"](function (error) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-employee-profile')["catch"](function (error) {
         _this8.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    asyncGetSomeUsers: function asyncGetSomeUsers(searchTerm) {
+    asyncGetAllUsers: function asyncGetAllUsers() {
       var _this9 = this;
+
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-all-users')["catch"](function (error) {
+        _this9.loopAllErrorsAsTriggerErrorToast(error);
+      });
+    },
+    asyncGetSomeUsers: function asyncGetSomeUsers(searchTerm) {
+      var _this10 = this;
 
       if (searchTerm === '') {
         return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-all-users')["catch"](function (error) {
-          _this9.loopAllErrorsAsTriggerErrorToast(error);
+          _this10.loopAllErrorsAsTriggerErrorToast(error);
         });
       }
 
       return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-some-users/' + searchTerm)["catch"](function (error) {
-        _this9.loopAllErrorsAsTriggerErrorToast(error);
-      });
-    },
-    asyncGetEmployees: function asyncGetEmployees() {
-      var _this10 = this;
-
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-employees')["catch"](function (error) {
         _this10.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    asyncCreateEmployees: function asyncCreateEmployees(employeeData) {
+    asyncGetEmployees: function asyncGetEmployees() {
       var _this11 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('create-employees', employeeData).then(function () {
-        _this11.triggerSuccessToast('Employee Added!');
-      })["catch"](function (error) {
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('get-employees')["catch"](function (error) {
         _this11.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
-    asyncDeleteEmployee: function asyncDeleteEmployee(employeeId) {
+    asyncCreateEmployees: function asyncCreateEmployees(employeeData) {
       var _this12 = this;
 
-      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('delete-employee/' + employeeId).then(function () {
-        _this12.triggerSuccessToast('Employee Removed');
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('create-employees', employeeData).then(function () {
+        _this12.triggerSuccessToast('Employee Added!');
       })["catch"](function (error) {
         _this12.loopAllErrorsAsTriggerErrorToast(error);
+      });
+    },
+    asyncDeleteEmployee: function asyncDeleteEmployee(employeeId) {
+      var _this13 = this;
+
+      return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('delete-employee/' + employeeId).then(function () {
+        _this13.triggerSuccessToast('Employee Removed');
+      })["catch"](function (error) {
+        _this13.loopAllErrorsAsTriggerErrorToast(error);
       });
     },
     //Triggers
@@ -70316,7 +70386,7 @@ var axiosCalls = {
     },
     // Loop all errors
     loopAllErrorsAsTriggerErrorToast: function loopAllErrorsAsTriggerErrorToast(errorResponse) {
-      var _this13 = this;
+      var _this14 = this;
 
       if ('response' in errorResponse && 'errors' in errorResponse.response.data) {
         var errors = [];
@@ -70324,7 +70394,7 @@ var axiosCalls = {
           errors = errors.concat(error);
         });
         errors.forEach(function (error) {
-          return _this13.triggerErrorToast(error);
+          return _this14.triggerErrorToast(error);
         });
       } else if (errorResponse.response.data.message) {
         this.triggerErrorToast(errorResponse.response.data.message);

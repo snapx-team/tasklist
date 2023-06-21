@@ -35,7 +35,7 @@
                     ></contract-card>
                 </div>
                 <div class="block"
-                     v-if="panelName === panelNames.jobSites" key="2">
+                     v-if="panelName === panelNames.jobSites">
                     <jobSiteCard
                         v-for="(addressData, index) in selectedContract.addresses"
                         :addressData=addressData

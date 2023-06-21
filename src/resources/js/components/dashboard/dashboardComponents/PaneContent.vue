@@ -104,14 +104,13 @@ export default {
         },
         getTasks() {
             this.isLoadingTasks = true
-
             if (this.type === "contract") {
                 this.asyncGetGlobalContractTasks(this.typeData.contractId).then((data) => {
                     this.tasks = data;
                     this.isLoadingTasks = false;
                 });
             } else if (this.type === "jobSite") {
-                this.asyncGetJobSiteTasks(this.typeData.jobSiteId).then((data) => {
+                this.asyncGetJobSiteTasks(this.typeData.jobSiteAddressId).then((data) => {
                     this.tasks = data;
                     this.isLoadingTasks = false;
                 });
@@ -124,7 +123,7 @@ export default {
             if (this.type === "contract") {
                 return {
                     contractId: this.selectedItem.id,
-                    jobSiteId: null,
+                    jobSiteAddressId: null,
                     color: 'purple',
                     title: this.selectedItem.name,
                     subTitle: this.selectedItem.jobSiteType ? this.selectedItem.jobSiteType : 'Job site type undefined'
@@ -132,7 +131,7 @@ export default {
             } else if (this.type === "jobSite") {
                 return {
                     contractId: this.selectedItem.id,
-                    jobSiteId: this.selectedItem.contractJobSite.id,
+                    jobSiteAddressId: this.selectedItem.contractJobSite.id,
                     color: 'green',
                     title: this.selectedItem.contractJobSite.address,
                     subTitle: this.selectedItem.contractJobSite.isPrimaryAddress ? 'Primary Address' : 'Secondary Address'
