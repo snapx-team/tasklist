@@ -8220,7 +8220,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -39264,19 +39263,13 @@ var render = function () {
                   _vm._v(
                     "on\n                    " +
                       _vm._s(
-                        _vm._f("moment")(
-                          _vm.task.time,
-                          "DD MMM, YYYY - HH:mm a"
-                        )
+                        _vm._f("moment")(_vm.task.time, "DD MMM, YYYY - HH:mm ")
                       )
                   ),
                 ])
               : _vm.task.isRecurring
               ? _c("p", { staticClass: "text-sm text-gray-600" }, [
-                  _vm._v(
-                    "at\n                    " +
-                      _vm._s(_vm._f("moment")(_vm.task.time, "HH:mm a"))
-                  ),
+                  _vm._v("at\n                    " + _vm._s(_vm.task.time)),
                 ])
               : _vm._e(),
           ]),

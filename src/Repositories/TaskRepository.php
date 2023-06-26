@@ -2,7 +2,6 @@
 
 namespace Xguard\Tasklist\Repositories;
 
-use App\Helpers\DateTimeHelper;
 use App\Models\JobSiteShift;
 use Carbon;
 use DB;
@@ -14,13 +13,20 @@ class TaskRepository
 {
     public static function getGlobalContractTasks(int $id)
     {
-        $tasks = Task::where(Task::CONTRACT_ID, $id)->whereNull(Task::JOB_SITE_ADDRESS_ID)->with(Task::TASK_RECURRENCE_RELATION_NAME)->get();
+        $tasks = Task::where(Task::CONTRACT_ID, $id)
+            ->whereNull(Task::JOB_SITE_ADDRESS_ID)
+            ->with(Task::TASK_RECURRENCE_RELATION_NAME)
+            ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
+            ->get();
         return TaskResource::collection($tasks);
     }
 
     public static function getJobSiteTasks(int $id)
     {
-        $tasks = Task::where(Task::JOB_SITE_ADDRESS_ID, $id)->with(Task::TASK_RECURRENCE_RELATION_NAME)->get();
+        $tasks = Task::where(Task::JOB_SITE_ADDRESS_ID, $id)
+            ->with(Task::TASK_RECURRENCE_RELATION_NAME)
+            ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
+            ->get();
         return TaskResource::collection($tasks);
     }
 
@@ -38,12 +44,15 @@ class TaskRepository
             $task->employee_id = session('employee_id');
             $task->save();
 
-            foreach ($data['selectedDaysOfWeek'] as $day) {
-                $taskRecurrence = new TaskRecurrence();
-                $taskRecurrence->day_of_week_id = $day['id'];
-                $taskRecurrence->task_id = $task->id;
-                $taskRecurrence->save();
+            if($task->is_recurring ){
+                foreach ($data['selectedDaysOfWeek'] as $day) {
+                    $taskRecurrence = new TaskRecurrence();
+                    $taskRecurrence->day_of_week_id = $day['id'];
+                    $taskRecurrence->task_id = $task->id;
+                    $taskRecurrence->save();
+                }
             }
+
             DB::commit();
 
         } catch (\Exception $e) {
@@ -81,39 +90,71 @@ class TaskRepository
         $jobSiteShift = JobSiteShift::find($jobSiteShift);
         $startDate = carbon::parse($jobSiteShift->shift_start);
         $endDate = carbon::parse($jobSiteShift->shift_end);
-        $startTime = $startDate->format('H:i:s');;
-        $endTime = $endDate->format('H:i:s');
         $contractId = $jobSiteShift->contract_id;
         $jobSiteAddressId = $jobSiteShift->subaddress_id;
         $currentDate = clone $startDate;
-        $daysOfWeekIds = [];
+        $daysOfWeekData = [];
 
         while ($currentDate->lte($endDate)) {
-            $daysOfWeekIds[] = $currentDate->dayOfWeekIso;
+            $daysOfWeekData[] = [
+                'beginningOfDay' => clone $currentDate->startOfDay(),
+                'shiftDay' => $currentDate->toDateString(),
+                'dayOfWeekId' => $currentDate->dayOfWeekIso,
+            ];
             $currentDate->addDay();
         }
 
-        $tasks = Task::where(Task::CONTRACT_ID, $contractId)
-            ->where(function ($query) use ($jobSiteAddressId) {
-                $query->where(Task::JOB_SITE_ADDRESS_ID, $jobSiteAddressId)
-                    ->orWhereNull(Task::JOB_SITE_ADDRESS_ID);
-            })
-            ->where(function ($query) use ($daysOfWeekIds, $startTime, $endTime, $endDate, $startDate) {
-                $query->where(function ($query) use ($startDate, $endDate) {
-                    $query->where(Task::IS_RECURRING, false)
-                        ->whereBetween(Task::TIME, [$startDate, $endDate]);
+        $concatenatedTasks = collect();
 
+        foreach ($daysOfWeekData as $dayOfWeekData) {
+            $tasks = Task::where(Task::CONTRACT_ID, $contractId)
+                ->where(function ($query) use ($jobSiteAddressId) {
+                    $query->where(Task::JOB_SITE_ADDRESS_ID, $jobSiteAddressId)
+                        ->orWhereNull(Task::JOB_SITE_ADDRESS_ID);
                 })
-                    ->orWhereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) use ($endTime, $startTime, $daysOfWeekIds) {
-                        $query->whereIn(TaskRecurrence::DAY_OF_WEEK_ID, $daysOfWeekIds)
-                            ->whereTime(Task::TIME, '>=', $startTime)
-                            ->whereTime(Task::TIME, '<=', $endTime);
-                    });
-            })
-            ->with(Task::TASK_RECURRENCE_RELATION_NAME)
-            ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
-            ->get();
+                ->where(function ($query) use ($dayOfWeekData, $startDate) {
+                    $query->where(Task::IS_RECURRING, false)
+                        ->whereDate(Task::TIME, $dayOfWeekData['beginningOfDay'])
+                        ->orWhereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) use ($dayOfWeekData) {
+                            $query->where(TaskRecurrence::DAY_OF_WEEK_ID, $dayOfWeekData['dayOfWeekId']);
+                        });
+                })
 
-        return TaskResource::collection($tasks);
+                ->with(Task::JOB_SITE_SHIFTS_RELATION_NAME)
+                ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
+                ->get();
+
+            $tasks = $tasks->map(function ($task) use ($dayOfWeekData) {
+                $task['dayOfWeekId'] = $dayOfWeekData['dayOfWeekId'];
+                $task['shiftDay'] = $dayOfWeekData['shiftDay'];
+                return $task;
+            });
+
+            $concatenatedTasks = $concatenatedTasks->concat($tasks);
+        }
+
+        return TaskResource::collection($concatenatedTasks);
+    }
+
+    public static function createCompletedTask(int $jobSiteShiftId, int $taskId)
+    {
+        try {
+            DB::beginTransaction();
+
+            $task = Task::find($taskId);
+            $jobSiteShift = JobSiteShift::find($jobSiteShiftId);
+
+
+            $task->completeTask($jobSiteShift);
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response([
+                'success' => 'false',
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

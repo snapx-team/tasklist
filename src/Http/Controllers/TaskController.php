@@ -3,11 +3,8 @@
 namespace Xguard\Tasklist\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobSiteShift;
-use DB;
 use Illuminate\Http\Request;
 use Xguard\Tasklist\Models\Task;
-use Xguard\Tasklist\Models\TaskRecurrence;
 use Xguard\Tasklist\Repositories\TaskRepository;
 
 class TaskController extends Controller
@@ -24,13 +21,22 @@ class TaskController extends Controller
 
     public function getEmployeeDailyTasks(int $jobSiteShiftId)
     {
-        return TaskRepository::getEmployeeDailyTasks($jobSiteShiftId);
+        $tasks = TaskRepository::getEmployeeDailyTasks($jobSiteShiftId);
+        return $tasks->groupBy('shiftDay');
     }
 
     public function createTask(Request $request)
     {
         $data = $request->all();
         return TaskRepository::createTask($data);
+
+    }
+
+    public function createCompletedTask(Request $request)
+    {
+        $jobSiteShiftId = $request->input('jobSiteShiftId');
+        $taskId = $request->input('taskId');
+        return TaskRepository::createCompletedTask($jobSiteShiftId, $taskId);
 
     }
 

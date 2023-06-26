@@ -22,11 +22,10 @@
                 <div>
                     <p class="text-sm text-gray-600" v-if="!task.time">Time Undefined Error</p>
                     <p class="text-sm text-gray-600" v-else-if="!task.isRecurring">on
-                        {{ task.time | moment("DD MMM, YYYY - HH:mm a") }}</p>
+                        {{ task.time | moment("DD MMM, YYYY - HH:mm ") }}</p>
                     <p class="text-sm text-gray-600" v-else-if="task.isRecurring">at
-                        {{ task.time | moment("HH:mm a") }}</p>
+                        {{ task.time }}</p>
                 </div>
-
             </div>
         </div>
 
