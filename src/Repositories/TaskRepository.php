@@ -112,14 +112,18 @@ class TaskRepository
                     $query->where(Task::JOB_SITE_ADDRESS_ID, $jobSiteAddressId)
                         ->orWhereNull(Task::JOB_SITE_ADDRESS_ID);
                 })
-                ->where(function ($query) use ($dayOfWeekData, $startDate) {
-                    $query->where(Task::IS_RECURRING, false)
-                        ->whereDate(Task::TIME, $dayOfWeekData['beginningOfDay'])
-                        ->orWhereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) use ($dayOfWeekData) {
-                            $query->where(TaskRecurrence::DAY_OF_WEEK_ID, $dayOfWeekData['dayOfWeekId']);
+                ->where(function ($query) use ($dayOfWeekData) {
+                    $query->where(function ($query) use ($dayOfWeekData) {
+                        $query->where(Task::IS_RECURRING, false)
+                            ->whereDate(Task::TIME, $dayOfWeekData['beginningOfDay']);
+                    })
+                        ->orWhere(function ($query) use ($dayOfWeekData) {
+                            $query->where(Task::IS_RECURRING, true)
+                                ->whereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) use ($dayOfWeekData) {
+                                    $query->where(TaskRecurrence::DAY_OF_WEEK_ID, $dayOfWeekData['dayOfWeekId']);
+                                });
                         });
                 })
-
                 ->with(Task::JOB_SITE_SHIFTS_RELATION_NAME)
                 ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
                 ->get();
