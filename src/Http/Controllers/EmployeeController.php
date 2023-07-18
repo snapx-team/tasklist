@@ -3,46 +3,73 @@
 namespace Xguard\Tasklist\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Throwable;
+use Xguard\Tasklist\Enums\SessionVariables;
 use Xguard\Tasklist\Models\Employee;
-use Xguard\Tasklist\Actions\Employees\CreateOrUpdateEmployeeAction;
-use Xguard\Tasklist\Actions\Employees\DeleteEmployeeAction;
+use Xguard\Tasklist\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
 {
-    public function createEmployees(Request $request)
+    const USER_NAME = 'userName';
+    const USER_STATUS = 'userStatus';
+    const USER_CREATED_AT = 'userCreatedAt';
+    const LANGUAGE = 'language';
+
+    /**
+     * Create Employee
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function createEmployees(Request $request): JsonResponse
     {
         $employeeData = $request->all();
-
-        try {
-            app(CreateOrUpdateEmployeeAction::class)->fill([
-                "selectedUsers" => $employeeData['selectedUsers'],
-                "role" => $employeeData['role'],
-            ])->run();
-        } catch (\Exception $e) {
-            return response([
-                'success' => 'false',
-                'message' => $e->getMessage(),
-            ], 400);
-        }
+        return EmployeeRepository::createOrUpdateEmployee($employeeData['selectedUsers'], $employeeData['role']);
     }
 
-    public function deleteEmployee($id)
+    /**
+     * Delete Employee
+     *
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function deleteEmployee(int $id): JsonResponse
     {
-        try {
-            app(DeleteEmployeeAction::class)->fill([
-                'tasklistId' => $id
-            ])->run();
-        } catch (\Exception $e) {
-            return response([
-                'success' => 'false',
-                'message' => $e->getMessage(),
-            ], 400);
-        }
+        return EmployeeRepository::deleteEmployee($id);
     }
+
+    /**
+     * Get employees
+     *
+     * @return Builder[]|Collection
+     */
 
     public function getEmployees()
     {
         return Employee::with('user')->get();
+    }
+
+    /**
+     * get Employee Profile info
+     *
+     * @return array
+     */
+    public function getEmployeeProfile(): array
+    {
+        $employee = Employee::with(Employee::USER_RELATION_NAME)->get()->find(session(SessionVariables::EMPLOYEE_ID()->getValue()));
+
+        return [
+            self::USER_NAME => $employee->user->full_name,
+            self::USER_STATUS => $employee->role,
+            self::USER_CREATED_AT => Carbon::parse($employee->created_at)->toDateString(),
+            self::LANGUAGE => $employee->user->locale
+        ];
     }
 }

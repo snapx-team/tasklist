@@ -6804,12 +6804,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mixins: [_mixins_axiosCallsMixin__WEBPACK_IMPORTED_MODULE_3__["axiosCalls"]],
   mounted: function mounted() {
-    this.getAdminPageData();
+    this.getEmployees();
   },
   data: function data() {
     return {
       filter: "",
-      adminPageData: null,
+      employees: null,
       loadingEmployees: false
     };
   },
@@ -6835,9 +6835,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       var cloneEmployeeData = _objectSpread({}, employeeData);
 
-      this.asyncCreateEmployees(cloneEmployeeData).then(function (res) {
+      this.asyncCreateEmployees(cloneEmployeeData).then(function () {
         _this2.asyncGetEmployees().then(function (data) {
-          _this2.adminPageData.employees = data.data;
+          _this2.employees = data.data;
           _this2.loadingEmployees = false;
         });
       });
@@ -6846,19 +6846,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this3 = this;
 
       this.loadingEmployees = true;
-      this.asyncDeleteEmployee(tasklistId).then(function (res) {
+      this.asyncDeleteEmployee(tasklistId).then(function () {
         _this3.asyncGetEmployees().then(function (data) {
-          _this3.adminPageData.employees = data.data;
+          _this3.employees = data.data;
           _this3.loadingEmployees = false;
         });
       });
     },
-    getAdminPageData: function getAdminPageData() {
+    getEmployees: function getEmployees() {
       var _this4 = this;
 
       this.eventHub.$emit("set-loading-state", true);
-      this.asyncGetAdminPageData().then(function (data) {
-        _this4.adminPageData = data.data;
+      this.asyncGetEmployees().then(function (data) {
+        _this4.employees = data.data;
 
         _this4.eventHub.$emit("set-loading-state", false);
       });
@@ -8926,10 +8926,10 @@ __webpack_require__.r(__webpack_exports__);
 
       this.eventHub.$emit("set-loading-state", true);
       this.asyncGetEmployeeProfile().then(function (data) {
-        _this.userName = data.data.data.userName;
-        _this.status = data.data.data.userStatus;
-        _this.memberSince = data.data.data.userCreatedAt;
-        _this.language = data.data.data.language;
+        _this.userName = data.data.userName;
+        _this.status = data.data.userStatus;
+        _this.memberSince = data.data.userCreatedAt;
+        _this.language = data.data.language;
         _this.loadingProfile = false;
 
         _this.eventHub.$emit("set-loading-state", false);
@@ -37164,7 +37164,7 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.adminPageData !== null
+  return _vm.employees !== null
     ? _c("div", [
         _c("div", {
           staticClass: "bg-gray-100 w-full h-64 absolute top-0 rounded-b-lg",
@@ -37177,13 +37177,11 @@ var render = function () {
           "div",
           { staticClass: "mx-10 my-3 space-y-5 shadow-xl p-5 bg-white" },
           [
-            _c("actions", {
-              attrs: { employeesLength: _vm.adminPageData.employees.length },
-            }),
+            _c("actions", { attrs: { employeesLength: _vm.employees.length } }),
             _vm._v(" "),
             _c("employee-list", {
               class: { "animate-pulse": _vm.loadingEmployees },
-              attrs: { employees: _vm.adminPageData.employees },
+              attrs: { employees: _vm.employees },
             }),
             _vm._v(" "),
             _c("add-or-edit-employee-modal"),
