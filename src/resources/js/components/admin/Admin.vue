@@ -1,5 +1,5 @@
 <template>
-    <div v-if="adminPageData !== null">
+    <div v-if="employees !== null">
         <div class="bg-gray-100 w-full h-64 absolute top-0 rounded-b-lg" style="z-index: -1"></div>
 
         <div class="flex flex-wrap p-4 pl-10">
@@ -7,10 +7,10 @@
         </div>
 
         <div class="mx-10 my-3 space-y-5 shadow-xl p-5 bg-white">
-            <actions :employeesLength="adminPageData.employees.length"></actions>
+            <actions :employeesLength="employees.length"></actions>
 
             <employee-list :class="{ 'animate-pulse': loadingEmployees }"
-                           :employees="adminPageData.employees"></employee-list>
+                           :employees="employees"></employee-list>
 
             <add-or-edit-employee-modal></add-or-edit-employee-modal>
         </div>
@@ -36,13 +36,13 @@ export default {
     mixins: [axiosCalls],
 
     mounted() {
-        this.getAdminPageData();
+        this.getEmployees();
     },
 
     data() {
         return {
             filter: "",
-            adminPageData: null,
+            employees: null,
             loadingEmployees: false,
         };
     },
@@ -66,9 +66,9 @@ export default {
         saveEmployees(employeeData) {
             this.loadingEmployees = true;
             const cloneEmployeeData = {...employeeData};
-            this.asyncCreateEmployees(cloneEmployeeData).then(res => {
+            this.asyncCreateEmployees(cloneEmployeeData).then(() => {
                 this.asyncGetEmployees().then((data) => {
-                    this.adminPageData.employees = data.data;
+                    this.employees = data.data;
                     this.loadingEmployees = false;
                 });
             });
@@ -76,18 +76,18 @@ export default {
 
         deleteEmployee(tasklistId) {
             this.loadingEmployees = true;
-            this.asyncDeleteEmployee(tasklistId).then(res => {
+            this.asyncDeleteEmployee(tasklistId).then(() => {
                 this.asyncGetEmployees().then((data) => {
-                    this.adminPageData.employees = data.data;
+                    this.employees = data.data;
                     this.loadingEmployees = false;
                 });
             });
         },
 
-        getAdminPageData() {
+        getEmployees() {
             this.eventHub.$emit("set-loading-state", true);
-            this.asyncGetAdminPageData().then((data) => {
-                this.adminPageData = data.data;
+            this.asyncGetEmployees().then((data) => {
+                this.employees = data.data;
                 this.eventHub.$emit("set-loading-state", false);
             });
         },

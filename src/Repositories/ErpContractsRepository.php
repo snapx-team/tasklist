@@ -3,16 +3,32 @@
 namespace Xguard\Tasklist\Repositories;
 
 use App\Models\Contract;
-use Xguard\LaravelKanban\Entities\ErpContract;
+use Xguard\Tasklist\Entities\ErpContract;
 
+/**
+ * Class ErpContractsRepository
+ * @package Xguard\Tasklist\Repositories
+ */
 class ErpContractsRepository
 {
+
+    /**
+     * Retrieve an ERP Contract with a contractId
+     *
+     * @param int $erpContractId
+     * @return ErpContract|null
+     */
     public static function retrieve(int $erpContractId): ?ErpContract
     {
         $erpContract = Contract::find($erpContractId);
         return $erpContract ? new ErpContract($erpContract->id, $erpContract->contract_identifier) : null;
     }
 
+    /**
+     * Get all active contracts
+     *
+     * @return array
+     */
     public static function getAllActiveContracts(): array
     {
         $erpContracts = Contract::with('jobSite.subaddresses')
@@ -21,6 +37,12 @@ class ErpContractsRepository
         return self::formatContracts($erpContracts);
     }
 
+    /**
+     * Get some active contracts based on search term
+     *
+     * @param $search
+     * @return array
+     */
     public static function getSomeActiveContracts($search): array
     {
         $erpContracts = Contract::with('jobSite')
@@ -32,6 +54,12 @@ class ErpContractsRepository
         return self::formatContracts($erpContracts);
     }
 
+    /**
+     * Format contracts
+     *
+     * @param $erpContracts
+     * @return mixed
+     */
     private static function formatContracts($erpContracts)
     {
         return $erpContracts->map(function ($erpContract) {

@@ -69,10 +69,10 @@ export default {
         getEmployeeProfileData() {
             this.eventHub.$emit("set-loading-state", true);
             this.asyncGetEmployeeProfile().then((data) => {
-                this.userName = data.data.data.userName;
-                this.status = data.data.data.userStatus;
-                this.memberSince = data.data.data.userCreatedAt;
-                this.language = data.data.data.language;
+                this.userName = data.data.userName;
+                this.status = data.data.userStatus;
+                this.memberSince = data.data.userCreatedAt;
+                this.language = data.data.language;
                 this.loadingProfile = false;
                 this.eventHub.$emit("set-loading-state", false);
             })
