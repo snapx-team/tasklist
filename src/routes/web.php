@@ -18,21 +18,20 @@ Route::group(['prefix' => 'tasklist', 'as' => 'tasklist'], function () {
 
                 // Employee App Data
                 Route::get('/get-role-and-employee-id', 'AppController@getRoleAndEmployeeId');
-                Route::get('/get-admin-page-data', 'AppController@getAdminPageData');
-                Route::get('/get-employee-profile', 'AppController@getEmployeeProfile');
                 Route::get('/get-footer-info', 'AppController@getFooterInfo');
 
                 // Employees
-                Route::post('/create-employees', 'EmployeeController@createEmployees');
-                Route::post('/delete-employee/{id}', 'EmployeeController@deleteEmployee');
+                Route::post('/create-employees', 'EmployeeController@createEmployees')->middleware(['tasklist_admin_check']);;
+                Route::post('/delete-employee/{id}', 'EmployeeController@deleteEmployee')->middleware(['tasklist_admin_check']);;
                 Route::get('/get-employees', 'EmployeeController@getEmployees');
+                Route::get('/get-employee-profile', 'EmployeeController@getEmployeeProfile');
 
                 // Tasks
                 Route::post('/create-task', 'TaskController@createTask');
                 Route::post('/delete-task/{id}', 'TaskController@deleteTask');
                 Route::post('/edit-task/{id}', 'TaskController@editTask');
                 Route::get('/get-global-contract-tasks/{id}', 'TaskController@getGlobalContractTasks');
-                Route::get('/get-job-site-tasks/{id}', 'TaskController@getJobSiteTasks');
+                Route::get('/get-job-site-tasks/{id}', 'TaskController@getJobSiteAddressTasks');
 
                 //ERP Data
                 Route::get('/get-all-users', 'ErpController@getAllUsers');
