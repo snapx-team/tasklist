@@ -5,6 +5,9 @@ namespace Xguard\Tasklist\Enums;
 use MyCLabs\Enum\Enum;
 
 /**
+ * Class DateTimeFormats
+ * @package Xguard\Tasklist\Enums
+ *
  * @method static DateTimeFormats DATE_FORMAT()
  * @method static DateTimeFormats TIME_FORMAT()
  * @method static DateTimeFormats DATE_TIME_FORMAT()

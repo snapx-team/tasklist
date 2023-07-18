@@ -2,11 +2,25 @@
 
 namespace Xguard\Tasklist\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * JobSiteResource
+ *
+ * @package Xguard\Tasklist\Http\Resources
+ *
+ * This class represents a Laravel resource for job sites.
+ */
 class JobSiteResource extends JsonResource
 {
-    public function toArray($request)
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  Request  $request
+     * @return array
+     */
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,

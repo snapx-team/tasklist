@@ -4,16 +4,31 @@ namespace Xguard\Tasklist\Http\Resources;
 
 use App\Helpers\DateTimeHelper;
 use Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
 use Xguard\Tasklist\Models\Task;
 
+/**
+ * TaskResource
+ *
+ * @package Xguard\Tasklist\Http\Resources
+ *
+ * This class represents a Laravel resource for Tasks.
+ */
 class TaskResource extends JsonResource
 {
-    public function toArray($request)
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  Request  $request
+     * @return array
+     */
+    public function toArray($request): array
     {
         $time = $this->is_recurring ? Carbon::parse($this->time)->format('H:i') : $this->time;
-        $completedTasks = $this->whenLoaded(TASK::JOB_SITE_SHIFTS_RELATION_NAME);
+        $completedTasks = $this->whenLoaded(TASK::COMPLETED_TASKS_RELATION_NAME);
         $isMissingValue = $completedTasks instanceof MissingValue;
 
         if (!$isMissingValue) {
