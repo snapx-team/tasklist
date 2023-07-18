@@ -3,10 +3,16 @@
 namespace Xguard\Tasklist\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Xguard\Tasklist\Models\Employee;
 
+/**
+ * Class IsAdmin
+ *
+ * Checks if an ERP user has access to the tasklist
+ *
+ * @package Xguard\Tasklist\Http\Middleware
+ */
 class CheckHasAccess
 {
     public function handle($request, Closure $next)

@@ -3,36 +3,75 @@
 namespace Xguard\Tasklist\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Throwable;
 use Xguard\Tasklist\Models\Task;
 use Xguard\Tasklist\Repositories\TaskRepository;
 
+/**
+ * TaskController Class
+ * @package Xguard\Tasklist\Http\Controllers
+ */
 class TaskController extends Controller
 {
-    public function getGlobalContractTasks($contractId)
+    /**
+     * Get global contract tasks
+     *
+     * @param $contractId
+     * @return AnonymousResourceCollection
+     */
+    public function getGlobalContractTasks($contractId) :AnonymousResourceCollection
     {
         return TaskRepository::getGlobalContractTasks($contractId);
     }
 
-    public function getJobSiteTasks($jobSiteAddressId)
+    /**
+     * Get job site address tasks
+     *
+     * @param $jobSiteAddressId
+     * @return AnonymousResourceCollection
+     */
+    public function getJobSiteAddressTasks($jobSiteAddressId): AnonymousResourceCollection
     {
-        return TaskRepository::getJobSiteTasks($jobSiteAddressId);
+        return TaskRepository::getJobSiteAddressTasks($jobSiteAddressId);
     }
 
+    /**
+     * Get employee's tasks for the days associated to a job site shift
+     *
+     * @param int $jobSiteShiftId
+     * @return mixed
+     */
     public function getEmployeeDailyTasks(int $jobSiteShiftId)
     {
         $tasks = TaskRepository::getEmployeeDailyTasks($jobSiteShiftId);
         return $tasks->groupBy('shiftDay');
     }
 
-    public function createTask(Request $request)
+    /**
+     * Create Task
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function createTask(Request $request): JsonResponse
     {
         $data = $request->all();
         return TaskRepository::createTask($data);
 
     }
 
-    public function createCompletedTask(Request $request)
+    /**
+     * Create Completed Task
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function createCompletedTask(Request $request): JsonResponse
     {
         $jobSiteShiftId = $request->input('jobSiteShiftId');
         $taskId = $request->input('taskId');
@@ -40,21 +79,43 @@ class TaskController extends Controller
 
     }
 
-    public function editTask($id, Request $request)
+    /**
+     * Edit Task
+     *
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function editTask($id, Request $request): JsonResponse
     {
         $newDescription = $request->input('description');
         return TaskRepository::editTask($id, $newDescription);
     }
 
+    /**
+     * Delete task
+     *
+     * @param $id
+     * @return JsonResponse
+     */
     public function deleteTask($id)
     {
         try {
             Task::destroy($id);
+            return response()->json(['success' => true,]);
         } catch (\Exception $e) {
-            return response([
-                'success' => 'false',
+            return response()->json([
+                'success' => false,
                 'message' => $e->getMessage(),
             ], 400);
         }
+    }
+
+    //TODO: To Remove
+    public function getTest()
+    {
+        return TaskRepository::notifyAllLateTasks();
+
     }
 }
