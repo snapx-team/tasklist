@@ -94,6 +94,4 @@ class Task extends Model
     {
         $this->completedTasks()->attach($jobSiteShift);
     }
-
-
 }

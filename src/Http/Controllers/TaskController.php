@@ -99,7 +99,7 @@ class TaskController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function deleteTask($id)
+    public function deleteTask($id): JsonResponse
     {
         try {
             Task::destroy($id);
@@ -110,12 +110,5 @@ class TaskController extends Controller
                 'message' => $e->getMessage(),
             ], 400);
         }
-    }
-
-    //TODO: To Remove
-    public function getTest()
-    {
-        return TaskRepository::notifyAllLateTasks();
-
     }
 }

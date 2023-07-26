@@ -181,13 +181,10 @@ class TaskRepository
                 'shiftDay' => $currentDate->toDateString(),
                 'dayOfWeekId' => $currentDate->dayOfWeekIso,
             ];
-            if($currentDate->dayOfWeekIso === $endDate->dayOfWeekIso){
+            if ($currentDate->dayOfWeekIso === $endDate->dayOfWeekIso) {
                 break;
             }
         } while ($currentDate->addDay());
-
-
-
 
         $concatenatedTasks = collect();
 
