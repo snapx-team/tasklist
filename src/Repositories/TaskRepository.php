@@ -2,6 +2,7 @@
 
 namespace Xguard\Tasklist\Repositories;
 
+use App\Actions\Users\SendPushNotificationToUserAction;
 use App\Helpers\DateTimeHelper;
 use App\Models\JobSiteShift;
 use App\Models\UserShift;
@@ -204,53 +205,63 @@ class TaskRepository
     }
 
     /**
+     * Send a push notification to user within 15-30 minutes before task needs to be completed
      * Send a Slack notification whenever there is an incomplete task that is past the deadline.
      *
      * current behavior:
-     * Notify if the task is more than 1 hour late and no notification has been sent before,
-     * or if the task is more than 4 hours late and a notification has been sent only once before.
+     * Send a push notification once to each employee on shift who is checked in up to 30 minutes before a task needs attention
+     * Send push and Slack notification once if the task is more than 1 hour late
+     * Send push and Slack notification once if the task is more than 4 hour late
      *
      * @return JsonResponse
      * @throws Throwable
      * @static
      */
-    public static function notifyAllLateTasks(): JsonResponse
+    public static function taskReminderNotifications(): JsonResponse
     {
         try {
             DB::beginTransaction();
 
-            $tasks = Task::whereIsIncompleteAndPastDeadline()->get();
+            $tasks = Task::whereIsIncompleteAndWithinAnHourOrPastDeadline()->get();
             $data = new stdClass();
 
             foreach ($tasks as $task) {
 
                 $taskTime = Carbon::parse($task->time);
 
-                if ($taskTime->toTimeString() < DateTimeHelper::now()->toTimeString()) {
+                if ($taskTime->toTimeString() < DateTimeHelper::now()->addMinutes(30)->min(Carbon::parse('23:59'))->toTimeString()) {
                     $taskTimeConverted = DateTimeHelper::today()->setTime($taskTime->hour, $taskTime->minute);
                 } else {
                     $taskTimeConverted = DateTimeHelper::today()->subDay()->setTime($taskTime->hour, $taskTime->minute);
                 }
 
-                $taskLog = LateTask::firstOrCreate(
-                    ['task_id' => $task->id],
-                    ['notification_count' => 0]
-                );
+                $notifyLateTask = false;
+                $sendEarlyReminderPushNotification = false;
 
-                $notify = false;
-                if (($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 1 && $taskLog->notification_count === 0)
-                    || ($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 4 && $taskLog->notification_count === 1)) {
-                    $taskLog->notification_count += 1;
-                    $taskLog->save();
-                    $notify = true;
+                if ($taskTimeConverted > DateTimeHelper::now() && $taskTimeConverted->diffInMinutes(DateTimeHelper::now()) <= 15) {
+                    $sendEarlyReminderPushNotification = true;
+                } else {
+                    $taskLog = LateTask::firstOrCreate(
+                        ['task_id' => $task->id, 'time' => $taskTimeConverted],
+                        ['notification_count' => 0]
+                    );
+
+                    if (($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 1 && $taskLog->notification_count === 0)
+                        || ($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 4 && $taskLog->notification_count === 1)) {
+                        $taskLog->notification_count += 1;
+                        $taskLog->save();
+                        $notifyLateTask = true;
+                    }
                 }
 
-                if ($notify) {
+                if ($notifyLateTask || $sendEarlyReminderPushNotification) {
 
                     $data->{$task->id} = new stdClass();
 
                     $jobSiteShifts = JobSiteShift::where('contract_id', $task->contract_id)
-                        ->where('subaddress_id', $task->job_site_address_id)
+                        ->when($task->job_site_address_id !== null, function ($query) use ($task) {
+                            return $query->where('subaddress_id', $task->job_site_address_id);
+                        })
                         ->where('shift_start', '<', $taskTimeConverted)
                         ->where('shift_end', '>', $taskTimeConverted)
                         ->get();
@@ -268,8 +279,23 @@ class TaskRepository
                                 'employeeName' => $employee->full_name,
                                 'phone' => $employee->tel_1,
                                 'id' => $employee->id,
-                                'expo_push_token' => $employee->full_name,
                             ];
+
+                            if ($sendEarlyReminderPushNotification) {
+                                SendPushNotificationToUserAction::dispatch([
+                                    'user' => $employee,
+                                    'title' => $employee->locale === 'en' ? 'You have an upcoming task' : 'Vous avez une tâche bientôt',
+                                    'body' => $task->description,
+                                    'type' => 'TASK_NOTIFICATION',
+                                ]);
+                            } else {
+                                SendPushNotificationToUserAction::dispatch([
+                                    'user' => $employee,
+                                    'title' => $employee->locale === 'en' ? 'There is an unfinished task that needs your attention' : 'Il y a une tâche incomplète qui requiert votre attention',
+                                    'body' => $task->description,
+                                    'type' => 'TASK_NOTIFICATION',
+                                ]);
+                            }
                         }
                     }
                     $data->{$task->id}->employees = $taskEmployees;
@@ -279,8 +305,7 @@ class TaskRepository
                 }
             }
 
-            if (!empty((array)$data)) {
-
+            if (!empty((array)$data) && $notifyLateTask) {
                 Notification::route('slack', env('SLACK_WEBHOOK_LATE_TASK'))
                     ->notify(new TaskSlackNotification(json_decode(json_encode($data), true)));
             }

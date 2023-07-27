@@ -19,13 +19,13 @@ class TaskQueryBuilder extends Builder
      * @return TaskQueryBuilder
      * @static
      */
-    public static function whereIsIncompleteAndPastDeadline(): Builder
+    public static function whereIsIncompleteAndWithinAnHourOrPastDeadline(): Builder
     {
         return Task::where(function ($query) {
             $query->where(function ($query) {
                 $query->where(Task::IS_RECURRING, false)
                     ->where(Task::TIME, '>=', DateTimeHelper::now()->subHours(4))
-                    ->where(Task::TIME, '<', DateTimeHelper::now());
+                    ->where(Task::TIME, '<', DateTimeHelper::now()->addMinutes(30));
             })
                 ->orWhere(function ($query) {
                     $query->where(Task::IS_RECURRING, true);
@@ -34,13 +34,13 @@ class TaskQueryBuilder extends Builder
                         $fourHoursAgo = DateTimeHelper::now()->subHours(4);
                         if ($now->dayOfWeek === $fourHoursAgo->dayOfWeek) {
                             $query->whereTime(Task::TIME, '>=', $fourHoursAgo)
-                                ->whereTime(Task::TIME, '<', $now)
+                                ->whereTime(Task::TIME, '<', $now->addMinutes(30))
                                 ->whereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) {
                                     $query->where(TaskRecurrence::DAY_OF_WEEK_ID, DateTimeHelper::now()->dayOfWeekIso);
                                 });
                         } else {
                             $query->where(function ($query) use ($now) {
-                                $query->whereTime(Task::TIME, '<', $now)
+                                $query->whereTime(Task::TIME, '<', $now->addMinutes(30))
                                     ->whereHas(Task::TASK_RECURRENCE_RELATION_NAME, function ($query) {
                                         $query->where(TaskRecurrence::DAY_OF_WEEK_ID, DateTimeHelper::now()->dayOfWeekIso);
                                     });

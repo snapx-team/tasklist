@@ -39,6 +39,6 @@ class TaskDeadlineHandler extends Command
      */
     public function handle()
     {
-        TaskRepository::notifyAllLateTasks();
+        TaskRepository::taskReminderNotifications();
     }
 }

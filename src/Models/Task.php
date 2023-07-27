@@ -45,7 +45,7 @@ use Xguard\Tasklist\QueryBuilders\TaskQueryBuilder;
  * @method static TaskQueryBuilder|Task whereDescription($value)
  * @method static TaskQueryBuilder|Task whereEmployeeId($value)
  * @method static TaskQueryBuilder|Task whereId($value)
- * @method static TaskQueryBuilder|Task whereIsIncompleteAndPastDeadline()
+ * @method static TaskQueryBuilder|Task whereIsIncompleteAndWithinAnHourOrPastDeadline()
  * @method static TaskQueryBuilder|Task whereIsRecurring($value)
  * @method static TaskQueryBuilder|Task whereJobSiteAddressId($value)
  * @method static TaskQueryBuilder|Task whereTime($value)

@@ -2,6 +2,8 @@
 
 namespace Xguard\Tasklist\Notifications;
 
+use App\Helpers\DateTimeHelper;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
@@ -28,19 +30,20 @@ class TaskSlackNotification extends Notification
             ->content("INCOMPLETE TASKS:\n ------------------------");
 
         foreach ($this->data as $task) {
-            $description = $task['description'];
-            $contractIdentifier = $task['contractIdentifier'];
 
-            $message->attachment(function ($attachment) use ($task) {
+            $taskTime = Carbon::createFromFormat('Y-m-d H:i:s', $task['time']);
+            $currentTime = DateTimeHelper::now();
+            $color = $currentTime->diffInHours($taskTime) > 2? '#FFE000': '#FF8000';
+            $message->attachment(function ($attachment) use ($color, $task) {
                 $attachment->pretext('TASK: ' . $task['description'])
                     ->fields([
                         'DEADLINE:' => $task['time'],
                         'CONTRACT:' => $task['contractIdentifier'],
-                    ]);
+                    ])
+                    ->color($color);
 
                 if (empty($task['employees'])) {
-                    $attachment->footer('No Employee Available', 'No one is currently checked into this shift to complete the task.')
-                        ->color('#FFE000');
+                    $attachment->footer('No Employee Available', 'No one is currently checked into this shift to complete the task.');
                 } else {
                     $employeeList = "ON-SITE EMPLOYEES \n" ;
                     foreach ($task['employees'] as $employee) {
@@ -49,8 +52,7 @@ class TaskSlackNotification extends Notification
 
                         $employeeList .= "{$employeeName} - Phone: {$phone}\n";
                     }
-
-                    $attachment->footer($employeeList)->color('#3498db');
+                    $attachment->footer($employeeList);
                 }
             });
         }
