@@ -55,7 +55,7 @@ class TaskListServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
-            $schedule->command(TaskDeadlineHandler::class)->everyFifteenMinutes();
+            $schedule->command(TaskDeadlineHandler::class)->cron('5-59/15 * * * *');
         });
         $this->app->singleton(S3Storage::class, function () {
             return Storage::disk('tasklist-s3');

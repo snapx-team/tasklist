@@ -229,7 +229,8 @@ class TaskRepository
 
                 $taskTime = Carbon::parse($task->time);
 
-                if ($taskTime->toTimeString() < DateTimeHelper::now()->addMinutes(30)->min(Carbon::parse('23:59'))->toTimeString()) {
+                // only time portion is necessary for recurring task -> we convert the current day with the time of the recurring task.
+                if ($taskTime->toTimeString() < DateTimeHelper::now()->addMinutes(30)->max(Carbon::parse('23:59'))->toTimeString()) {
                     $taskTimeConverted = DateTimeHelper::today()->setTime($taskTime->hour, $taskTime->minute);
                 } else {
                     $taskTimeConverted = DateTimeHelper::today()->subDay()->setTime($taskTime->hour, $taskTime->minute);
