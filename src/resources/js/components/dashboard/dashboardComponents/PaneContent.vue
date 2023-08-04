@@ -8,12 +8,32 @@
                               :type="type"
                               :days-of-week="daysOfWeek"/>
 
-            <div class="overflow-auto pt-3">
+            <div class="overflow-auto pt-3 flex-grow">
                 <TaskCard v-for="task in tasks"
                           :key="task.id"
                           :task="task"
                           :type="type"
                           :days-of-week="daysOfWeek"/>
+            </div>
+
+            <div class="flex flex-col items-center py-2 justify-end shadow-lg bg-gray-200 pt-3">
+                <label class="flex items-start cursor-pointer" :for="type + 'toggle'">
+                    <div class="mr-3 text-gray-700 font-medium text-right text-sm">
+                        <p>Active Tasks</p>
+                    </div>
+                    <div class="relative mt-1">
+                        <input class="hidden"
+                               :id="type + 'toggle'"
+                               type="checkbox"
+                               @change="toggleExpiredMode"/>
+                        <div
+                            class="toggle__dot absolute w-5 h-5 bg-blue-700 rounded-full shadow inset-y-0 left-0"></div>
+                        <div class="toggle__line w-10 h-4 bg-gray-400 rounded-full shadow-inner"></div>
+                    </div>
+                    <div class="ml-3 text-gray-700 font-medium text-sm">
+                        <p>Expired Tasks</p>
+                    </div>
+                </label>
             </div>
         </div>
 
@@ -62,6 +82,7 @@ export default {
     },
     data() {
         return {
+            isExpiredMode: false,
             tasks: [],
             componentWidth: 0,
             isLoadingTasks: false,
@@ -99,8 +120,26 @@ export default {
     },
 
     methods: {
+        toggleExpiredMode() {
+            this.isExpiredMode = !this.isExpiredMode;
+            this.isExpiredMode? this.getExpiredTasks():this.getTasks();
+        },
         getComponentWidth() {
             setTimeout(() => this.componentWidth = this.$refs.responsiveDiv.offsetWidth, 100);
+        },
+        getExpiredTasks() {
+            this.isLoadingTasks = true
+            if (this.type === "contract") {
+                this.asyncGetExpiredGlobalContractTasks(this.typeData.contractId).then((data) => {
+                    this.tasks = data;
+                    this.isLoadingTasks = false;
+                });
+            } else if (this.type === "jobSite") {
+                this.asyncGetExpiredJobSiteTasks(this.typeData.jobSiteAddressId).then((data) => {
+                    this.tasks = data;
+                    this.isLoadingTasks = false;
+                });
+            }
         },
         getTasks() {
             this.isLoadingTasks = true
@@ -116,6 +155,8 @@ export default {
                 });
             }
         }
+
+
     },
 
     computed: {
@@ -147,3 +188,17 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.toggle__dot {
+    top: -0.1rem;
+
+    transition: all 0.1s ease-in-out;
+}
+
+input:checked ~ .toggle__dot {
+    transform: translateX(100%);
+    background-color: #960532;
+}
+
+</style>

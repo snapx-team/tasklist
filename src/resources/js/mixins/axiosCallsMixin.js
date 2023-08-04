@@ -40,7 +40,16 @@ export const axiosCalls = {
         },
 
         asyncGetGlobalContractTasks(contractId) {
+            console.log(contractId);
             return axios.get('get-global-contract-tasks/' + contractId).then((res) => {
+                return res.data.data;
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
+        asyncGetExpiredGlobalContractTasks(contractId) {
+            return axios.get('get-expired-global-contract-tasks/' + contractId).then((res) => {
                 return res.data.data;
             }).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);
@@ -49,6 +58,14 @@ export const axiosCalls = {
 
         asyncGetJobSiteTasks(jobSiteAddressId) {
             return axios.get('get-job-site-tasks/' + jobSiteAddressId).then((res) => {
+                return res.data.data;
+            }).catch((error) => {
+                this.loopAllErrorsAsTriggerErrorToast(error);
+            });
+        },
+
+        asyncGetExpiredJobSiteTasks(jobSiteAddressId) {
+            return axios.get('get-expired-job-site-tasks/' + jobSiteAddressId).then((res) => {
                 return res.data.data;
             }).catch((error) => {
                 this.loopAllErrorsAsTriggerErrorToast(error);

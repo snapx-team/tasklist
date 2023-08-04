@@ -28,6 +28,18 @@ class TaskController extends Controller
     }
 
     /**
+     * Get expired global contract tasks
+     *
+     * @param $contractId
+     * @return AnonymousResourceCollection
+     */
+    public function getExpiredGlobalContractTasks($contractId) :AnonymousResourceCollection
+    {
+        return TaskRepository::getExpiredGlobalContractTasks($contractId);
+    }
+
+
+    /**
      * Get job site address tasks
      *
      * @param $jobSiteAddressId
@@ -36,6 +48,17 @@ class TaskController extends Controller
     public function getJobSiteAddressTasks($jobSiteAddressId): AnonymousResourceCollection
     {
         return TaskRepository::getJobSiteAddressTasks($jobSiteAddressId);
+    }
+
+    /**
+     * Get expired job site address tasks
+     *
+     * @param $jobSiteAddressId
+     * @return AnonymousResourceCollection
+     */
+    public function getExpiredJobSiteAddressTasks($jobSiteAddressId): AnonymousResourceCollection
+    {
+        return TaskRepository::getExpiredJobSiteAddressTasks($jobSiteAddressId);
     }
 
     /**

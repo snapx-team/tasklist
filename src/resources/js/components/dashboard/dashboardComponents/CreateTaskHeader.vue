@@ -122,7 +122,7 @@
 
                             <div class="flex justify-center mt-2 absolute text-center w-full">
                                 <button
-                                    @click=""
+                                    @click="clearTask()"
                                     class="w-10 h-10 bg-yellow-700 rounded-full hover:bg-yellow-800 mouse transition ease-in duration-200 focus:outline-none mx-1">
                                     <i class="fas fa-times text-white"></i>
                                 </button>
@@ -219,6 +219,12 @@ export default {
                     this.eventHub.$emit("reload-tasks:jobSite");
                 }
             });
+        },
+        clearTask() {
+            this.selectedDaysOfWeek = [];
+            this.selectedTime = null;
+            this.description = '';
+            this.isRecurring =  true;
         }
     },
     computed: {

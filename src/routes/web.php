@@ -31,7 +31,9 @@ Route::group(['prefix' => 'tasklist', 'as' => 'tasklist'], function () {
                 Route::post('/delete-task/{id}', 'TaskController@deleteTask');
                 Route::post('/edit-task/{id}', 'TaskController@editTask');
                 Route::get('/get-global-contract-tasks/{id}', 'TaskController@getGlobalContractTasks');
+                Route::get('/get-expired-global-contract-tasks/{id}', 'TaskController@getExpiredGlobalContractTasks');
                 Route::get('/get-job-site-tasks/{id}', 'TaskController@getJobSiteAddressTasks');
+                Route::get('/get-expired-job-site-tasks/{id}', 'TaskController@getExpiredJobSiteAddressTasks');
 
                 //ERP Data
                 Route::get('/get-all-users', 'ErpController@getAllUsers');
