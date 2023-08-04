@@ -35,11 +35,41 @@ class TaskRepository
      */
     public static function getGlobalContractTasks(int $id): AnonymousResourceCollection
     {
+        $yesterday = Carbon::yesterday()->toDateString();
+
         $tasks = Task::where(Task::CONTRACT_ID, $id)
+            ->where(function ($query) use ($yesterday) {
+                $query->where(Task::IS_RECURRING, false)
+                    ->whereDate(Task::TIME, '>=', $yesterday);
+            })
+            ->orWhere(Task::IS_RECURRING, true)
             ->whereNull(Task::JOB_SITE_ADDRESS_ID)
             ->with(Task::TASK_RECURRENCE_RELATION_NAME)
             ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
             ->get();
+
+        return TaskResource::collection($tasks);
+    }
+
+    /**
+     * Get all expired tasks for a specific contract
+     *
+     * @param int $id
+     * @return AnonymousResourceCollection
+     * @static
+     */
+    public static function getExpiredGlobalContractTasks(int $id): AnonymousResourceCollection
+    {
+        $yesterday = Carbon::yesterday();
+
+        $tasks = Task::where(Task::CONTRACT_ID, $id)
+            ->where(Task::IS_RECURRING, false)
+            ->whereDate(Task::TIME, '<', $yesterday)
+            ->whereNull(Task::JOB_SITE_ADDRESS_ID)
+            ->with(Task::TASK_RECURRENCE_RELATION_NAME)
+            ->orderBy(Task::TIME, 'DESC')
+            ->get();
+
         return TaskResource::collection($tasks);
     }
 
@@ -52,10 +82,39 @@ class TaskRepository
      */
     public static function getJobSiteAddressTasks(int $id): AnonymousResourceCollection
     {
+        $yesterday = Carbon::yesterday();
+
         $tasks = Task::where(Task::JOB_SITE_ADDRESS_ID, $id)
+            ->where(function ($query) use ($yesterday) {
+                $query->where(Task::IS_RECURRING, false)
+                    ->whereDate(Task::TIME, '>=', $yesterday);
+            })
+            ->orWhere(Task::IS_RECURRING, true)
             ->with(Task::TASK_RECURRENCE_RELATION_NAME)
             ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
             ->get();
+
+        return TaskResource::collection($tasks);
+    }
+
+    /**
+     * Get all expired tasks for a specific contract
+     *
+     * @param int $id
+     * @return AnonymousResourceCollection
+     * @static
+     */
+    public static function getExpiredJobSiteAddressTasks(int $id): AnonymousResourceCollection
+    {
+        $yesterday = Carbon::yesterday();
+
+        $tasks = Task::where(Task::JOB_SITE_ADDRESS_ID, $id)
+            ->where(Task::IS_RECURRING, false)
+            ->whereDate(Task::TIME, '<', $yesterday)
+            ->with(Task::TASK_RECURRENCE_RELATION_NAME)
+            ->orderBy(Task::TIME, 'DESC')
+            ->get();
+
         return TaskResource::collection($tasks);
     }
 
@@ -211,7 +270,7 @@ class TaskRepository
      * current behavior:
      * Send a push notification once to each employee on shift who is checked in up to 30 minutes before a task needs attention
      * Send push and Slack notification once if the task is more than 1 hour late
-     * Send push and Slack notification once if the task is more than 4 hour late
+     * Send push and Slack notification once if the task is more than 3 hour late
      *
      * @return JsonResponse
      * @throws Throwable
@@ -248,7 +307,7 @@ class TaskRepository
                     );
 
                     if (($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 1 && $taskLog->notification_count === 0)
-                        || ($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 4 && $taskLog->notification_count === 1)) {
+                        || ($taskTimeConverted->diffInHours(DateTimeHelper::now()) >= 3 && $taskLog->notification_count === 1)) {
                         $taskLog->notification_count += 1;
                         $taskLog->save();
                         $notifyLateTask = true;

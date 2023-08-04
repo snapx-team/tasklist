@@ -27,8 +27,24 @@
                 <div class="block"
                      v-if="panelName === panelNames.contracts"
                      key="1">
+                    <div class="relative flex items-center bg-white rounded-md shadow-md px-4 py-2 m-2">
+                        <input
+                            type="text"
+                            v-model="searchQuery"
+                            placeholder="Search contracts by name"
+                            class="w-full bg-transparent outline-none text-gray-800 placeholder-gray-400"
+                        />
+
+                        <span
+                            v-if="searchQuery"
+                            @click="clearSearch"
+                            class="text-gray-500 hover:text-gray-700 cursor-pointer"
+                        >
+                            <i class="text-lg fas fa-times-circle"></i>
+                        </span>
+                    </div>
                     <contract-card
-                        v-for="contract in contractsData"
+                        v-for="contract in filteredContracts"
                         :key="contract.id"
                         :contract="contract"
                         @click.native="selectContract(contract)"
@@ -79,7 +95,21 @@ export default {
                 next: "next",
                 previous: "previous"
             },
+            searchQuery: '',
         };
+    },
+
+    computed: {
+        filteredContracts() {
+            // Filter contracts based on the searchQuery
+            if (!this.searchQuery) {
+                return this.contractsData;
+            }
+            const query = this.searchQuery.trim().toLowerCase();
+            return this.contractsData.filter((contract) =>
+                contract.name.toLowerCase().includes(query)
+            );
+        },
     },
 
     methods: {
@@ -111,6 +141,9 @@ export default {
         },
         togglePane() {
             this.eventHub.$emit("toggle-contracts-list");
+        },
+        clearSearch() {
+            this.searchQuery = '';
         },
     }
 }
