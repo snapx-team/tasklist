@@ -84,12 +84,17 @@ class TaskRepository
     {
         $yesterday = Carbon::yesterday();
 
-        $tasks = Task::where(Task::JOB_SITE_ADDRESS_ID, $id)
-            ->where(function ($query) use ($yesterday) {
-                $query->where(Task::IS_RECURRING, false)
-                    ->whereDate(Task::TIME, '>=', $yesterday);
+        $tasks = Task::where(function ($query) use ($yesterday, $id) {
+            $query->where(Task::JOB_SITE_ADDRESS_ID, $id)
+                ->where(function ($query) use ($yesterday) {
+                    $query->where(Task::IS_RECURRING, false)
+                        ->whereDate(Task::TIME, '>=', $yesterday);
+                });
+        })
+            ->orWhere(function ($query) use ($id) {
+                $query->where(Task::JOB_SITE_ADDRESS_ID, $id)
+                    ->where(Task::IS_RECURRING, true);
             })
-            ->orWhere(Task::IS_RECURRING, true)
             ->with(Task::TASK_RECURRENCE_RELATION_NAME)
             ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
             ->get();
