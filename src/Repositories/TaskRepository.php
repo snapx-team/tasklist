@@ -39,11 +39,15 @@ class TaskRepository
 
         $tasks = Task::where(Task::CONTRACT_ID, $id)
             ->where(function ($query) use ($yesterday) {
-                $query->where(Task::IS_RECURRING, false)
-                    ->whereDate(Task::TIME, '>=', $yesterday);
+                $query->where(function ($innerQuery) use ($yesterday) {
+                    $innerQuery->where(Task::IS_RECURRING, false)
+                        ->whereDate(Task::TIME, '>=', $yesterday);
+                })
+                    ->orWhere(function ($innerQuery) {
+                        $innerQuery->where(Task::IS_RECURRING, true)
+                            ->whereNull(Task::JOB_SITE_ADDRESS_ID);
+                    });
             })
-            ->orWhere(Task::IS_RECURRING, true)
-            ->whereNull(Task::JOB_SITE_ADDRESS_ID)
             ->with(Task::TASK_RECURRENCE_RELATION_NAME)
             ->orderByRaw("DATE_FORMAT(time, '%H:%i') ASC")
             ->get();
